@@ -41,6 +41,9 @@
   (remove-overlays)
   (widget-insert (propertize "PO.ET\n\n" 'face 'info-title-1))
 
+  (if (not POET-API-TOKEN)
+     (progn
+
   (widget-create 'editable-field
                  :size 98
                  :format "API Token:\t%v" ; Text after the field!
@@ -49,8 +52,10 @@
                            (message "no")))
                  "")
 
-  (widget-insert " See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
 
+  (widget-insert " See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
+  ))
+  
   (setq w_name (widget-create 'editable-field
                               :size 13
                               :format "Name:\t\t%v\n" ; Text after the field!
