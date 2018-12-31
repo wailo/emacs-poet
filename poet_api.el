@@ -105,24 +105,21 @@
 
 
 (defun POET-popup-form ()
-
-  
+  (setq content-buf (current-buffer))
   (with-temp-buffer "*POET Claim*"
-      (switch-to-buffer-other-window "*POET Claim*")
-    (POET-create-claim-form (current-buffer))
+  (switch-to-buffer-other-window "*POET Claim*")
+    (POET-create-claim-form content-buf)
     )
   )
 
 (POET-popup-form)
 
-
-
 (defun poet-create-claim-request (name date-c date-p author tags content)
   "Create cleam on poet network."
 
   (require 'request)
-  ;; (custom-set-variables '(request-log-level -1)
-                        ;; '(request-message-level -1))
+ (custom-set-variables '(request-log-level 'debug )
+                        '(request-message-level 'debug))
 
   (print (request
    POET-API-URL
