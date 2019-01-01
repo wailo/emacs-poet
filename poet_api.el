@@ -56,12 +56,12 @@
   (setq w_date_c (widget-create 'editable-field
                                 :size 13
                                 :format "Date Created:\t%v\n" ; Text after the field!
-                                (format-time-string "%Y-%m-%dT%T%Z")))
+                                (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
 
   (setq w_date_p (widget-create 'editable-field
                                 :size 13
                                 :format "Date Published:\t%v\n" ; Text after the field!
-                                (format-time-string "%Y-%m-%dT%T%Z")))
+                                (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
   (setq w_author (widget-create 'editable-field
                                 :size 13
                                 :format "Author:\t\t%v\n" ; Text after the field!
