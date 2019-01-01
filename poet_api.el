@@ -1,7 +1,7 @@
 ;;; code:
 
 
-(defcustom POET-API-URL "https://api.poetnetwork.net" "POET API URL"
+(defcustom POET-API-URL "https://api.poetnetwork.net/works" "POET API URL"
   :type '(string)
   :group 'POET
   )
@@ -10,12 +10,6 @@
   :type '(string)
   :group 'POET
   )
-
-
-
-
-
-  (setq API_URL "https://api.poetnetwork.net")
 
 
 (defun get-content (buf)
@@ -34,7 +28,6 @@
 
 (defun POET-create-claim-form (buf)
   "Create PO.ET claim form."
-  (interactive)
   (setq content (get-content buf))
   (let ((inhibit-read-only t) )
     (erase-buffer))
@@ -105,6 +98,7 @@
 
 
 (defun POET-popup-form ()
+  (interactive)
   (setq content-buf (current-buffer))
   (with-temp-buffer "*POET Claim*"
   (switch-to-buffer-other-window "*POET Claim*")
@@ -126,7 +120,7 @@
    :type "POST"
    :data (json-encode `(("name" . ,name) ("dateCreated" . ,date-c)
                         ("datePublished" . ,date-p) ("author" . ,author) ("tags" . ,tags) ("content" . ,content)))
-   :headers '(("Content-Type" . "application/json") ("token" . ,POET-API-TOKEN))
+   :headers `(("Content-Type" . "application/json") ("token" . ,POET-API-TOKEN))
    :parser 'json-read
    :success (cl-function
              (lambda (&key data &allow-other-keys)
