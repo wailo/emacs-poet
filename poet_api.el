@@ -15,9 +15,9 @@
 (defun get-content (buf)
   "get content in a selectd region or the whole buffer."
   (with-current-buffer buf
-  (if (region-active-p)
-      (buffer-substring-no-properties (region-beginning) (region-end))
-  (buffer-substring-no-properties (point-min) (point-max) )))
+    (if (region-active-p)
+        (buffer-substring-no-properties (region-beginning) (region-end))
+      (buffer-substring-no-properties (point-min) (point-max) )))
   )
 
 (require 'widget)
@@ -35,19 +35,19 @@
   (widget-insert (propertize "PO.ET\n\n" 'face 'info-title-1))
 
   (if (not POET-API-TOKEN)
-     (progn
+      (progn
 
-  (widget-create 'editable-field
-                 :size 98
-                 :format "API Token:\t%v" ; Text after the field!
-                 :notify (lambda (wid &rest ignore) (if (string-prefix-p "TEST" (widget-value wid))
-                           (message "yes") ;; change API address and inform the user
-                           (message "no")))
-                 "")
+        (widget-create 'editable-field
+                       :size 98
+                       :format "API Token:\t%v" ; Text after the field!
+                       :notify (lambda (wid &rest ignore) (if (string-prefix-p "TEST" (widget-value wid))
+                                                              (message "yes") ;; change API address and inform the user
+                                                            (message "no")))
+                       "")
 
 
-  (widget-insert " See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
-  ))
+        (widget-insert " See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
+        ))
   
   (setq w_name (widget-create 'editable-field
                               :size 13
@@ -72,7 +72,7 @@
                               ""))
   (widget-insert "\n")
 
-    (widget-create 'push-button
+  (widget-create 'push-button
                  :notify (lambda (&rest ignore)
                            (poet-create-claim-request (widget-value w_name)
                                                       (widget-value w_date_c)
@@ -101,45 +101,92 @@
   (interactive)
   (setq content-buf (current-buffer))
   (with-temp-buffer "*POET Claim*"
-  (switch-to-buffer-other-window "*POET Claim*")
-    (POET-create-claim-form content-buf)
-    )
+                    (switch-to-buffer-other-window "*POET Claim*")
+                    (POET-create-claim-form content-buf)
+                    )
   )
-
-(POET-popup-form)
 
 (defun poet-create-claim-request (name date-c date-p author tags content)
   "Create cleam on poet network."
 
   (require 'request)
- (custom-set-variables '(request-log-level 'debug )
+  (custom-set-variables '(request-log-level 'debug )
                         '(request-message-level 'debug))
 
   (print (request
+          POET-API-URL
+          :type "POST"
+          :data (json-encode `(("name" . ,name) ("dateCreated" . ,date-c)
+                               ("datePublished" . ,date-p) ("author" . ,author) ("tags" . ,tags) ("content" . ,content)))
+          :headers `(("Content-Type" . "application/json") ("token" . ,POET-API-TOKEN))
+          :parser 'json-read
+          :success (cl-function
+                    (lambda (&key data &allow-other-keys)
+                      (message "Work Id: %S" (assoc-default 'workId data))))))
+  )
+
+(defun poet-retrieve-works ()
+  "Create cleam on poet network."
+  (interactive)
+  (require 'requst)
+  (custom-set-variables '(request-log-level 'debug )
+                        '(request-message-level 'debug))
+  (setq response nil)
+
+  (request
    POET-API-URL
-   :type "POST"
-   :data (json-encode `(("name" . ,name) ("dateCreated" . ,date-c)
-                        ("datePublished" . ,date-p) ("author" . ,author) ("tags" . ,tags) ("content" . ,content)))
+   :type "GET"
    :headers `(("Content-Type" . "application/json") ("token" . ,POET-API-TOKEN))
    :parser 'json-read
    :success (cl-function
              (lambda (&key data &allow-other-keys)
-               (message "Work Id: %S" (assoc-default 'workId data))))))
+               (setq response (poet-parse-works-response data))
+               (my-listing-command response)
+               )))
+  response
   )
 
 
+(defun poet-parse-works-response (json-response)
+  (setq index 0)
+  (mapcar (lambda (work) (append (list (cl-incf index) (poet-parse-works-extract-values work)))) json-response)
+  )
+
+(defun poet-parse-works-extract-values (work)
+  (vector (assoc-default 'name work)
+          (assoc-default 'author work)
+          (assoc-default 'dateCreated work)
+          (assoc-default 'datePublished work)
+          (assoc-default 'tags work)
+          (assoc-default 'hash work)
+          (assoc-default 'archiveUrl work)
+          )
+  )
+
+
+
+(define-derived-mode poet-mode tabulated-list-mode "po.et-mode" "Major mode PO.ET mode"
+  (setq tabulated-list-format [("name" 18 t)
+                               ("Author" 12 nil)
+                               ("dateCreated"  10 t)
+                               ("datePublished"  10 t)
+                               ("tags"  10 t)
+                               ("hash"  10 t)
+                               ("archiveUrl" 0 nil)])
+  (setq tabulated-list-padding 2)
+  (setq tabulated-list-sort-key (cons "name" nil))
+  (tabulated-list-init-header))
+
+(defun print-current-line-id ()
+  (interactive)
+  (message (concat "current line ID is: " (tabulated-list-get-id))))
+
+(defun my-listing-command (data)
+  (interactive)
+  (pop-to-buffer "*PO.ET Works*" nil)
+  (poet-mode)
+  (setq tabulated-list-entries data)
+  (tabulated-list-print t))
+
 (provide poet_api)
 ;;; poet_api.el ends here
-
-
-
-;;; function to create a org buffer
-;; This buffer is for text that is not saved, and for Lisp evaluation.
-;; To create a file, visit it with <open> and enter text in its buffer.
-
-;; (progn
-;;   (setq claim-buffer (get-buffer-create "poet-claim"))
-;;   (with-current-buffer claim-buffer
-;;     (org-mode)
-;;     (insert "* Claim name\n:Name: \n:Author:\n:CreationDate: \n:PublicationDate: \n:Tags: \n:Content:")
-;;     ))
