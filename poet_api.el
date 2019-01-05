@@ -141,9 +141,8 @@
    :success (cl-function
              (lambda (&key data &allow-other-keys)
                (setq response (poet-parse-works-response data))
-               (my-listing-command response)
+               (poet-works-popup response)
                )))
-  response
   )
 
 
@@ -181,7 +180,7 @@
   (interactive)
   (message (concat "current line ID is: " (tabulated-list-get-id))))
 
-(defun my-listing-command (data)
+(defun poet-works-popup (data)
   (interactive)
   (pop-to-buffer "*PO.ET Works*" nil)
   (poet-mode)
