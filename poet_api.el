@@ -128,7 +128,7 @@
 (defun poet-retrieve-works ()
   "Create cleam on poet network."
   (interactive)
-  (require 'requst)
+  (require 'request)
   (custom-set-variables '(request-log-level 'debug )
                         '(request-message-level 'debug))
   (setq response nil)
