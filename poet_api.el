@@ -142,7 +142,8 @@
    :parser 'json-read
    :success (cl-function
              (lambda (&key data &allow-other-keys)
-               (setq poet-works (poet-parse-works-response data))
+               (setq poet-works data)
+               (poet-parse-works-response data)
                (poet-works-popup poet-works)
                ;; (poet-works-table response)
                )))
@@ -150,7 +151,6 @@
 
 
 (defun poet-parse-works-response (json-response)
-  (setq poet-works json-response)
   (setq index 0)
   (mapcar (lambda (work) (append (list (cl-incf index) (poet-parse-works-extract-values work)))) json-response)
   )
