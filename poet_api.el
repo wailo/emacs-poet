@@ -11,6 +11,8 @@
   :group 'POET
   )
 
+(defvar-local poet-works "Data structure for poet works")
+
 
 (defun get-content (buf)
   "get content in a selectd region or the whole buffer."
@@ -140,14 +142,15 @@
    :parser 'json-read
    :success (cl-function
              (lambda (&key data &allow-other-keys)
-               (setq response (poet-parse-works-response data))
-               (poet-works-popup response)
-               (poet-works-table response)
+               (setq poet-works (poet-parse-works-response data))
+               (poet-works-popup poet-works)
+               ;; (poet-works-table response)
                )))
   )
 
 
 (defun poet-parse-works-response (json-response)
+  (setq poet-works json-response)
   (setq index 0)
   (mapcar (lambda (work) (append (list (cl-incf index) (poet-parse-works-extract-values work)))) json-response)
   )
@@ -155,34 +158,38 @@
 (defun poet-parse-works-extract-values (work)
   (vector (assoc-default 'name work)
           (assoc-default 'author work)
+          (assoc-default 'tags work)
           (assoc-default 'dateCreated work)
           (assoc-default 'datePublished work)
-          (assoc-default 'tags work)
-          (assoc-default 'hash work)
-          (assoc-default 'archiveUrl work)
+          ;; (assoc-default 'hash work)
+          ;; (assoc-default 'archiveUrl work)
           )
   )
 
 
 
 (define-derived-mode poet-mode tabulated-list-mode "po.et-mode" "Major mode PO.ET mode"
-  (setq tabulated-list-format [("name" 18 t)
-                               ("Author" 12 nil)
-                               ("dateCreated"  10 t)
-                               ("datePublished"  10 t)
-                               ("tags"  10 t)
-                               ("hash"  10 t)
-                               ("archiveUrl" 0 nil)])
+  (define-key tabulated-list-mode-map (kbd "RET") 'poet-open-work)
+  (use-local-map tabulated-list-mode-map)
+  (setq tabulated-list-format [("name" 50 t)
+                               ("Author" 30 nil)
+                               ("tags"  50 t)
+                               ("dateCreated"  30 t)
+                               ("datePublished"  30 t)
+                               ;; ("hash"  10 t)
+                               ;; ("archiveUrl" 0 nil)
+                               ])
   (setq tabulated-list-padding 2)
   (setq tabulated-list-sort-key (cons "name" nil))
   (tabulated-list-init-header))
 
-(defun print-current-line-id ()
+(defun poet-open-work ()
   (interactive)
-  (message (concat "current line ID is: " (tabulated-list-get-id))))
+  (tabulated-list-get-id)
+  (tabulated-list-get-entry)
+  )
 
 (defun poet-works-popup (data)
-  (interactive)
   (pop-to-buffer "*PO.ET Works*" nil)
   (poet-mode)
   (setq tabulated-list-entries data)
