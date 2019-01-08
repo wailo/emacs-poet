@@ -195,36 +195,5 @@
   (setq tabulated-list-entries data)
   (tabulated-list-print t))
 
-
-(require 'ctable)
-(defun poet-works-table (input-data)
-(let* ((column-model ; column model
-        (list (make-ctbl:cmodel
-              :title "Name" :sorter 'ctbl:sort-string-lessp
-              :min-width 5 :align 'left)
-              (make-ctbl:cmodel
-               :title "Author" :align 'left
-               :sorter (lambda (a b) 'ctbl:sort-string-lessp))
-              (make-ctbl:cmodel
-               :title "Date Created" :align 'left)
-              (make-ctbl:cmodel
-               :title "Date Published" :align 'left)
-              (make-ctbl:cmodel
-               :title "Tags" :align 'left)
-              (make-ctbl:cmodel
-               :title "hash" :align 'left)
-       (make-ctbl:cmodel
-               :title "URL" :align 'left)))
-       (data (mapcar (lambda (element) (append element nil))  (mapcar (lambda (pair) (nth 1 pair)) input-data) ))
-       (model ; data model
-          (make-ctbl:model
-           :column-model column-model :data data))
-       (component ; ctable component
-        (ctbl:create-table-component-buffer
-         :model model)))
-  (pop-to-buffer (ctbl:cp-get-buffer component)))
-)
-
-
 (provide poet_api)
 ;;; poet_api.el ends here
