@@ -42,29 +42,33 @@
 
 ;;;; Customization
 
-(defcustom poet-api-url "https://api.poetnetwork.net/works" "Po.et api url"
+(defcustom poet-api-url "https://api.poetnetwork.net/works" "Po.et api url."
   :type '(string)
   :group 'Po.et)
 
-(defcustom poet-api-token "" "Po.et api Authentication token"
+(defcustom poet-api-token "" "Po.et api Authentication token."
   :type '(string)
   :group 'Po.et)
 
 
 ;;;; Variables
 
-(defvar poet-works nil "Data structure for Po.et works")
+(defvar poet-works nil "Data structure for Po.et works.")
 
 
 (defun get-content (buf)
-  "get content in a selectd region or the whole buffer."
+  "Get content in a selectd region or the whole buffer.
+BUF Target buffer where content will be extracted"
+
   (with-current-buffer buf
     (if (region-active-p)
         (buffer-substring-no-properties (region-beginning) (region-end))
       (buffer-substring-no-properties (point-min) (point-max)))))
 
 (defun poet-create-claim-form (buf)
-  "Create PO.ET claim form."
+  "Create ui for Po.et claim form.
+BUF Target buffer where content will be extracted"
+
   (setq content (get-content buf))
   (let ((inhibit-read-only t))
     (erase-buffer))
@@ -80,8 +84,6 @@
                                                               (message "yes") ;; change API address and inform the user
                                                             (message "no")))
                        "")
-
-
         (widget-insert " See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")))
 
   (setq w_name (widget-create 'editable-field
@@ -132,7 +134,9 @@
 
 
 ;;;###autoload
-(defun poet-popup-form ()
+(defun poet-create-claim ()
+  "Create cleam on Po.et network."
+
   (interactive)
   (setq content-buf (current-buffer))
   (with-temp-buffer "*Po.et Claim*"
@@ -140,7 +144,13 @@
                     (poet-create-claim-form content-buf)))
 
 (defun poet-create-claim-request (name date-c date-p author tags content)
-  "Create cleam on poet network."
+  "Create cleam on poet network.
+NAME published work name
+DATE-C published work creation date
+DATE-P published work publication date
+AUTHOR published work author
+TAGS published work tags
+CONTENT published work content"
 
   (message (request
             poet-api-url
@@ -155,9 +165,8 @@
 
 ;;;###autoload
 (defun poet-retrieve-works ()
-  "Create cleam on poet network."
+  "Retrieve works from Po.et network"
   (interactive)
-
   (request
    poet-api-url
    :type "GET"
@@ -166,24 +175,28 @@
    :success (cl-function
              (lambda (&key data &allow-other-keys)
                (setq poet-works data)
-               (poet-works-popup (poet-parse-works-response data))))))
+               (poet-works-list-popup (poet-parse-works-response data))))))
 
-(defun poet-parse-works-response (json-response)
+(defun poet-parse-works-response (works-json-response)
+  "Parse works json response and convert it to a list of vector.
+WORKS-JSON-RESPONSE api response of $API_URL/works"
+
   (setq index 0)
-  (mapcar (lambda (work) (append (list (cl-incf index) (poet-parse-works-extract-values work)))) json-response))
+  (mapcar (lambda (work) (append (list (cl-incf index) (poet-parse-works-extract-values work)))) works-json-response))
 
 (defun poet-parse-works-extract-values (work)
+  "Extract values from a single work entry.
+WORK work entry"
+
   (vector (assoc-default 'name work)
           (assoc-default 'author work)
           (assoc-default 'tags work)
           (assoc-default 'dateCreated work)
           (assoc-default 'datePublished work)
-          ;; (assoc-default 'hash work)
-          ;; (assoc-default 'archiveUrl work)
           ))
 
 
-(define-derived-mode poet-mode tabulated-list-mode "po.et-mode" "Major mode Po.et mode"
+(define-derived-mode poet-mode tabulated-list-mode "Po.et-mode" "Major mode Po.et mode"
   (define-key tabulated-list-mode-map (kbd "RET") (lambda () (interactive) (poet-open-work)))
   (use-local-map tabulated-list-mode-map)
   (setq tabulated-list-format [("name" 50 t)
@@ -219,13 +232,16 @@
   (setq hash (assoc-default 'hash content-header))
   (setq archiveUrl (assoc-default 'archiveUrl content-header))
 
-  (with-output-to-temp-buffer "foo"
+  (with-output-to-temp-buffer (format "*Po.et %s" name)
     (print (format "Name: %s\nAuthor: %s\nCreationDate: %s\nPublicationDate: %s\nTags: %s\nHash: %s \nURL: %s\n\nContent:\n%s" name author dateCreated datePublished tags hash archiveUrl content))))
 
-(defun poet-works-popup (data)
-  (pop-to-buffer "*PO.ET Works*" nil)
+(defun poet-works-list-popup (poet-works-list)
+  "List published works in a popup.
+POET-WORKS-LIST list of published works"
+
+  (pop-to-buffer "*Po.et Works*" nil)
   (poet-mode)
-  (setq tabulated-list-entries data)
+  (setq tabulated-list-entries poet-works-list)
   (tabulated-list-print t))
 
 (provide 'poet)
