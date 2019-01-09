@@ -1,4 +1,4 @@
-;;; poet_client.el --- Client for Po.et network api  -*- lexical-binding: t; -*-
+;;; poet-client.el --- Client for Po.et network api  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 W.Yahia
 
@@ -251,5 +251,5 @@ POET-WORKS-LIST list of published works"
   (setq tabulated-list-entries poet-works-list)
   (tabulated-list-print t))
 
-(provide 'poet)
-;;; poet_api.el ends here
+(provide 'poet-client)
+;;; poet-client.el ends here
