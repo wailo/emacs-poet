@@ -196,7 +196,7 @@ WORK work entry"
           ))
 
 
-(define-derived-mode poet-mode tabulated-list-mode "Po.et-mode" "Major mode Po.et mode"
+(define-derived-mode poet-mode tabulated-list-mode "Po.et-mode" "Major mode for Po.et UI menu of publised works"
   (define-key tabulated-list-mode-map (kbd "RET") (lambda () (interactive) (poet-get-selected-work-from-url)))
   (use-local-map tabulated-list-mode-map)
   (setq tabulated-list-format [("name" 50 t)
