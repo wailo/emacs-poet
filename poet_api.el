@@ -37,7 +37,7 @@
 
 ;;;; Customization
 
-(defcustom poet-api-url "https://api.poetnetwork.net/works" "POET API URL"
+(defcustom poet-api-url "https://api.poetnetwork.net/works" "Po.et api url"
   :type '(string)
   :group 'Po.et
   )
@@ -130,7 +130,7 @@
   (beginning-of-buffer))
 
 
-
+;;;###autoload
 (defun poet-popup-form ()
   (interactive)
   (setq content-buf (current-buffer))
@@ -157,6 +157,7 @@
                       (message "Work Id: %S" (assoc-default 'workId data))))))
   )
 
+;;;###autoload
 (defun poet-retrieve-works ()
   "Create cleam on poet network."
   (interactive)
@@ -195,7 +196,7 @@
   )
 
 
-(define-derived-mode poet-mode tabulated-list-mode "po.et-mode" "Major mode PO.ET mode"
+(define-derived-mode poet-mode tabulated-list-mode "po.et-mode" "Major mode Po.et mode"
   (define-key tabulated-list-mode-map (kbd "RET") 'poet-open-work)
   (use-local-map tabulated-list-mode-map)
   (setq tabulated-list-format [("name" 50 t)
