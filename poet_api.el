@@ -197,7 +197,7 @@ WORK work entry"
 
 
 (define-derived-mode poet-mode tabulated-list-mode "Po.et-mode" "Major mode Po.et mode"
-  (define-key tabulated-list-mode-map (kbd "RET") (lambda () (interactive) (poet-open-work)))
+  (define-key tabulated-list-mode-map (kbd "RET") (lambda () (interactive) (poet-get-selected-work-from-url)))
   (use-local-map tabulated-list-mode-map)
   (setq tabulated-list-format [("name" 50 t)
                                ("Author" 30 nil)
@@ -211,29 +211,36 @@ WORK work entry"
   (setq tabulated-list-sort-key (cons "name" nil))
   (tabulated-list-init-header))
 
-(defun poet-open-work ()
-  (setq index (tabulated-list-get-id))
-  (setq content-header (aref poet-works index))
-  (setq url (assoc-default 'archiveUrl content-header))
+(defun poet-get-selected-work-from-url ()
+  "Get/Download published user selected work.
+The index of the selected work is retrieved using 'tabulated-list-get-id'"
+
+  (let ((index (tabulated-list-get-id))
+    (content-header (aref poet-works index))
+    (url (assoc-default 'archiveUrl content-header)))
 
   (request
    url
    :parser 'buffer-string
    :success (cl-function
              (lambda (&key data &allow-other-keys)
-               (poet-works-buffer content-header data)))))
+               (poet-works-buffer content-header data))))))
 
 (defun poet-works-buffer (content-header content)
-  (setq name (assoc-default 'name content-header))
-  (setq author (assoc-default 'author content-header))
-  (setq tags (assoc-default 'tags content-header))
-  (setq dateCreated (assoc-default 'dateCreated content-header))
-  (setq datePublished (assoc-default 'datePublished content-header))
-  (setq hash (assoc-default 'hash content-header))
-  (setq archiveUrl (assoc-default 'archiveUrl content-header))
+  "Display work content in a buffer.
+CONTENT-HEADER header of the publishd work e.g. name, author.
+CONTENT the body/content of the published work"
+
+  (let ((name (assoc-default 'name content-header))
+        (author (assoc-default 'author content-header))
+        (tags (assoc-default 'tags content-header))
+        (dateCreated (assoc-default 'dateCreated content-header))
+        (datePublished (assoc-default 'datePublished content-header))
+        (hash (assoc-default 'hash content-header))
+        (archiveUrl (assoc-default 'archiveUrl content-header)))
 
   (with-output-to-temp-buffer (format "*Po.et %s" name)
-    (print (format "Name: %s\nAuthor: %s\nCreationDate: %s\nPublicationDate: %s\nTags: %s\nHash: %s \nURL: %s\n\nContent:\n%s" name author dateCreated datePublished tags hash archiveUrl content))))
+    (print (format "Name: %s\nAuthor: %s\nCreationDate: %s\nPublicationDate: %s\nTags: %s\nHash: %s \nURL: %s\n\nContent:\n%s" name author dateCreated datePublished tags hash archiveUrl content)))))
 
 (defun poet-works-list-popup (poet-works-list)
   "List published works in a popup.
