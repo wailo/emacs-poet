@@ -44,13 +44,11 @@
 
 (defcustom poet-api-url "https://api.poetnetwork.net/works" "Po.et api url"
   :type '(string)
-  :group 'Po.et
-  )
+  :group 'Po.et)
 
 (defcustom poet-api-token "" "Po.et api Authentication token"
   :type '(string)
-  :group 'Po.et
-  )
+  :group 'Po.et)
 
 
 ;;;; Variables
@@ -63,13 +61,12 @@
   (with-current-buffer buf
     (if (region-active-p)
         (buffer-substring-no-properties (region-beginning) (region-end))
-      (buffer-substring-no-properties (point-min) (point-max) )))
-  )
+      (buffer-substring-no-properties (point-min) (point-max)))))
 
 (defun poet-create-claim-form (buf)
   "Create PO.ET claim form."
   (setq content (get-content buf))
-  (let ((inhibit-read-only t) )
+  (let ((inhibit-read-only t))
     (erase-buffer))
   (remove-overlays)
   (widget-insert (propertize "PO.ET\n\n" 'face 'info-title-1))
@@ -85,8 +82,7 @@
                        "")
 
 
-        (widget-insert " See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
-        ))
+        (widget-insert " See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")))
 
   (setq w_name (widget-create 'editable-field
                               :size 13
@@ -141,26 +137,23 @@
   (setq content-buf (current-buffer))
   (with-temp-buffer "*Po.et Claim*"
                     (switch-to-buffer-other-window "*Po.et Claim*")
-                    (poet-create-claim-form content-buf)
-                    )
-  )
+                    (poet-create-claim-form content-buf)))
 
 (defun poet-create-claim-request (name date-c date-p author tags content)
   "Create cleam on poet network."
-  (custom-set-variables '(request-log-level 'debug )
+  (custom-set-variables '(request-log-level 'debug)
                         '(request-message-level 'debug))
 
-  (print (request
-          poet-api-url
-          :type "POST"
-          :data (json-encode `(("name" . ,name) ("dateCreated" . ,date-c)
-                               ("datePublished" . ,date-p) ("author" . ,author) ("tags" . ,tags) ("content" . ,content)))
-          :headers `(("Content-Type" . "application/json") ("token" . ,poet-api-token))
-          :parser 'json-read
-          :success (cl-function
-                    (lambda (&key data &allow-other-keys)
-                      (message "Work Id: %S" (assoc-default 'workId data))))))
-  )
+  (message (request
+            poet-api-url
+            :type "POST"
+            :data (json-encode `(("name" . ,name) ("dateCreated" . ,date-c)
+                                 ("datePublished" . ,date-p) ("author" . ,author) ("tags" . ,tags) ("content" . ,content)))
+            :headers `(("Content-Type" . "application/json") ("token" . ,poet-api-token))
+            :parser 'json-read
+            :success (cl-function
+                      (lambda (&key data &allow-other-keys)
+                        (message "Work Id: %S" (assoc-default 'workId data)))))))
 
 ;;;###autoload
 (defun poet-retrieve-works ()
@@ -169,8 +162,6 @@
 
   ;; (custom-set-variables '(request-log-level 'debug )
   ;;                       '(request-message-level 'debug))
-  
-  (setq response nil)
 
   (request
    poet-api-url
@@ -180,14 +171,11 @@
    :success (cl-function
              (lambda (&key data &allow-other-keys)
                (setq poet-works data)
-               (poet-works-popup (poet-parse-works-response data))
-               )))
-  )
+               (poet-works-popup (poet-parse-works-response data))))))
 
 (defun poet-parse-works-response (json-response)
   (setq index 0)
-  (mapcar (lambda (work) (append (list (cl-incf index) (poet-parse-works-extract-values work)))) json-response)
-  )
+  (mapcar (lambda (work) (append (list (cl-incf index) (poet-parse-works-extract-values work)))) json-response))
 
 (defun poet-parse-works-extract-values (work)
   (vector (assoc-default 'name work)
@@ -197,8 +185,7 @@
           (assoc-default 'datePublished work)
           ;; (assoc-default 'hash work)
           ;; (assoc-default 'archiveUrl work)
-          )
-  )
+          ))
 
 
 (define-derived-mode poet-mode tabulated-list-mode "po.et-mode" "Major mode Po.et mode"
@@ -206,9 +193,9 @@
   (use-local-map tabulated-list-mode-map)
   (setq tabulated-list-format [("name" 50 t)
                                ("Author" 30 nil)
-                               ("tags"  50 t)
-                               ("dateCreated"  30 t)
-                               ("datePublished"  30 t)
+                               ("tags" 50 t)
+                               ("dateCreated" 30 t)
+                               ("datePublished" 30 t)
                                ;; ("hash"  10 t)
                                ;; ("archiveUrl" 0 nil)
                                ])
@@ -228,9 +215,7 @@
    :parser 'buffer-string
    :success (cl-function
              (lambda (&key data &allow-other-keys)
-               (poet-works-buffer content-header data)
-               )))
-  )
+               (poet-works-buffer content-header data)))))
 
 (defun poet-works-buffer (content-header content)
   (setq name (assoc-default 'name content-header))
@@ -242,9 +227,7 @@
   (setq archiveUrl (assoc-default 'archiveUrl content-header))
 
   (with-output-to-temp-buffer "foo"
-    (print (format "Name: %s\nAuthor: %s\nCreationDate: %s\nPublicationDate: %s\nTags: %s\nHash: %s \nURL: %s\n\nContent:\n%s" name author dateCreated datePublished tags hash archiveUrl content))
-    )
-  )
+    (print (format "Name: %s\nAuthor: %s\nCreationDate: %s\nPublicationDate: %s\nTags: %s\nHash: %s \nURL: %s\n\nContent:\n%s" name author dateCreated datePublished tags hash archiveUrl content))))
 
 (defun poet-works-popup (data)
   (pop-to-buffer "*PO.ET Works*" nil)
