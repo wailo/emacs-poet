@@ -77,13 +77,13 @@ BUF Target buffer where content will be extracted"
 
   (if (not poet-api-token)
       (progn
-        (widget-create 'editable-field
+        (setq w_api_token (widget-create 'editable-field
                        :size 98
                        :format "API Token:\t%v" ; Text after the field!
                        :notify (lambda (wid &rest ignore) (if (string-prefix-p "TEST" (widget-value wid))
                                                               (message "yes") ;; change API address and inform the user
                                                             (message "no")))
-                       "")
+                       ""))
         (widget-insert " See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")))
 
   (setq w_name (widget-create 'editable-field
@@ -111,6 +111,10 @@ BUF Target buffer where content will be extracted"
 
   (widget-create 'push-button
                  :notify (lambda (&rest ignore)
+                           (if (not poet-api-token)
+                               (setq poet-api-token (widget-value w_api_token))
+                             )
+
                            (poet-create-claim-request (widget-value w_name)
                                                       (widget-value w_date_c)
                                                       (widget-value w_date_p)
