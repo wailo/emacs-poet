@@ -1,12 +1,17 @@
-;;; package-name.el --- Package description (don't include the word "Emacs")  -*- lexical-binding: t; -*-
+;;; poet_client.el --- Client for Po.et network api  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 W.Yahia
 
 ;; Author: W.Yahia
-;; URL: https://github.com/wailo/emacs-poet
 ;; Version: 0.1-pre
-;; Package-Requires: ((emacs "25.2"))
-;; Keywords: Po.et
+;; Package-Requires: ((widget) (wid-edit) (request))
+;; Keywords: Po.et blockchain publishing
+;; URL: https://github.com/wailo/emacs-poet
+
+;;; Commentary:
+
+;; This package provide a client to Po.et network api.
+;; The can publish work to the network and list published works
 
 ;; This file is not part of GNU Emacs.
 
@@ -25,8 +30,8 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-;;; code:
 
+;;; code:
 
 ;;;; Requirements
 
