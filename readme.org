@@ -1,4 +1,4 @@
-* package-name
+* Po.et API client
 :PROPERTIES:
 :TOC:      ignore
 :END:
@@ -11,14 +11,6 @@ The client supoprt the following functionalities:
 ** Screenshots
 
 screenshot1.png
-
-* Contents                                                         :noexport:
-:PROPERTIES:
-:TOC:      this
-:END:
-  -  Installation
-  -  Usage
-  -  Development
 
 * Installation
 :PROPERTIES:
@@ -70,14 +62,3 @@ To retrieve claim:
 * Development
 
 Bug reports, feature requests, suggestions and pull requests are more than welcome
-
-* License
-
-GPLv3
-
-# Local Variables:
-# eval: (require 'org-make-toc)
-# before-save-hook: org-make-toc
-# org-export-with-properties: ()
-# org-export-with-title: t
-# End:
