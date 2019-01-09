@@ -1,17 +1,16 @@
 ;;; code:
 
-
-(defcustom POET-API-URL "https://api.poetnetwork.net/works" "POET API URL"
+(defcustom poet-api-url "https://api.poetnetwork.net/works" "POET API URL"
   :type '(string)
-  :group 'POET
+  :group 'Po.et
   )
 
-(defcustom POET-API-TOKEN "" "POET API Authentication token"
+(defcustom poet-api-token "" "Po.et api Authentication token"
   :type '(string)
-  :group 'POET
+  :group 'Po.et
   )
 
-(defvar poet-works nil "Data structure for poet works")
+(defvar poet-works nil "Data structure for Po.et works")
 
 
 (defun get-content (buf)
@@ -28,7 +27,7 @@
   (require 'wid-edit))
 
 
-(defun POET-create-claim-form (buf)
+(defun poet-create-claim-form (buf)
   "Create PO.ET claim form."
   (setq content (get-content buf))
   (let ((inhibit-read-only t) )
@@ -36,9 +35,8 @@
   (remove-overlays)
   (widget-insert (propertize "PO.ET\n\n" 'face 'info-title-1))
 
-  (if (not POET-API-TOKEN)
+  (if (not poet-api-token)
       (progn
-
         (widget-create 'editable-field
                        :size 98
                        :format "API Token:\t%v" ; Text after the field!
@@ -99,28 +97,27 @@
 
 
 
-(defun POET-popup-form ()
+(defun poet-popup-form ()
   (interactive)
   (setq content-buf (current-buffer))
-  (with-temp-buffer "*POET Claim*"
-                    (switch-to-buffer-other-window "*POET Claim*")
-                    (POET-create-claim-form content-buf)
+  (with-temp-buffer "*Po.et Claim*"
+                    (switch-to-buffer-other-window "*Po.et Claim*")
+                    (poet-create-claim-form content-buf)
                     )
   )
 
 (defun poet-create-claim-request (name date-c date-p author tags content)
   "Create cleam on poet network."
-
   (require 'request)
   (custom-set-variables '(request-log-level 'debug )
                         '(request-message-level 'debug))
 
   (print (request
-          POET-API-URL
+          poet-api-url
           :type "POST"
           :data (json-encode `(("name" . ,name) ("dateCreated" . ,date-c)
                                ("datePublished" . ,date-p) ("author" . ,author) ("tags" . ,tags) ("content" . ,content)))
-          :headers `(("Content-Type" . "application/json") ("token" . ,POET-API-TOKEN))
+          :headers `(("Content-Type" . "application/json") ("token" . ,poet-api-token))
           :parser 'json-read
           :success (cl-function
                     (lambda (&key data &allow-other-keys)
@@ -136,9 +133,9 @@
   (setq response nil)
 
   (request
-   POET-API-URL
+   poet-api-url
    :type "GET"
-   :headers `(("Content-Type" . "application/json") ("token" . ,POET-API-TOKEN))
+   :headers `(("Content-Type" . "application/json") ("token" . ,poet-api-token))
    :parser 'json-read
    :success (cl-function
              (lambda (&key data &allow-other-keys)
@@ -215,5 +212,5 @@
   (setq tabulated-list-entries data)
   (tabulated-list-print t))
 
-(provide poet_api)
+(provide 'poet)
 ;;; poet_api.el ends here
