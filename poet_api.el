@@ -11,7 +11,7 @@
   :group 'POET
   )
 
-(defvar-local poet-works "Data structure for poet works")
+(defvar poet-works nil "Data structure for poet works")
 
 
 (defun get-content (buf)
@@ -50,7 +50,7 @@
 
         (widget-insert " See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
         ))
-  
+
   (setq w_name (widget-create 'editable-field
                               :size 13
                               :format "Name:\t\t%v\n" ; Text after the field!
@@ -143,12 +143,9 @@
    :success (cl-function
              (lambda (&key data &allow-other-keys)
                (setq poet-works data)
-               (poet-parse-works-response data)
-               (poet-works-popup poet-works)
-               ;; (poet-works-table response)
+               (poet-works-popup (poet-parse-works-response data))
                )))
   )
-
 
 (defun poet-parse-works-response (json-response)
   (setq index 0)
@@ -165,7 +162,6 @@
           ;; (assoc-default 'archiveUrl work)
           )
   )
-
 
 
 (define-derived-mode poet-mode tabulated-list-mode "po.et-mode" "Major mode PO.ET mode"
@@ -185,8 +181,32 @@
 
 (defun poet-open-work ()
   (interactive)
-  (tabulated-list-get-id)
-  (tabulated-list-get-entry)
+
+  (setq index (tabulated-list-get-id))
+  (setq content-header (aref poet-works index))
+  (setq url (assoc-default 'archiveUrl content-header))
+
+  (request
+   url
+   :parser 'buffer-string
+   :success (cl-function
+             (lambda (&key data &allow-other-keys)
+               (poet-works-buffer content-header data)
+               )))
+  )
+
+(defun poet-works-buffer (content-header content)
+  (setq name (assoc-default 'name content-header))
+  (setq author (assoc-default 'author content-header))
+  (setq tags (assoc-default 'tags content-header))
+  (setq dateCreated (assoc-default 'dateCreated content-header))
+  (setq datePublished (assoc-default 'datePublished content-header))
+  (setq hash (assoc-default 'hash content-header))
+  (setq archiveUrl (assoc-default 'archiveUrl content-header))
+
+  (with-output-to-temp-buffer "foo"
+    (print (format "Name: %s\nAuthor: %s\nCreationDate: %s\nPublicationDate: %s\nTags: %s\nHash: %s \nURL: %s\n\nContent:\n%s" name author dateCreated datePublished tags hash archiveUrl content))
+    )
   )
 
 (defun poet-works-popup (data)
