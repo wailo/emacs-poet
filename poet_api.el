@@ -215,7 +215,7 @@ WORK work entry"
   "Get/Download published user selected work.
 The index of the selected work is retrieved using 'tabulated-list-get-id'"
 
-  (let ((index (tabulated-list-get-id))
+  (let* ((index (tabulated-list-get-id))
     (content-header (aref poet-works index))
     (url (assoc-default 'archiveUrl content-header)))
 
