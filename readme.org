@@ -1,0 +1,83 @@
+* package-name
+:PROPERTIES:
+:TOC:      ignore
+:END:
+
+This is an emacs client for Po.et blockchain (https://www.po.et). A decentralized protocol for content ownership, discovery and monetization in media
+The client supoprt the following functionalities:
+ 1. Create and publish work wihtin emacs, using a content of a buffer.
+ 2. View list of published works using easy to use user interface
+
+** Screenshots
+
+screenshot1.png
+
+* Contents                                                         :noexport:
+:PROPERTIES:
+:TOC:      this
+:END:
+  -  Installation
+  -  Usage
+  -  Development
+
+* Installation
+:PROPERTIES:
+:TOC:      0
+:END:
+
+** MELPA
+
+In progess
+
+** Manual
+
+  Install these required packages:
+
+  + request
+  + widget
+
+  Then put poet-client.el in your load-path, and put this in your init file:
+
+  #+BEGIN_SRC elisp
+(require 'poet-client)
+  #+END_SRC
+
+* Usage
+:PROPERTIES:
+:TOC:      0
+:END:
+
+To register a claim:
+ 1. Get API token by following instructions here: https://docs.poetnetwork.net/use-poet/create-your-first-claim.html
+ 2. In emacs: M-x -> customize group -> Po.et and then fill the api token. Warning: this will save your token in emacs config file. If you do not want your token to be saved, then ignore this step.
+ 3. Open the file and make the buffer active.
+ 4. M-x poet-create-claim
+ 5. Fill the form. an API token field will be displayed if the token is not saved in emacs config. In this case you will need to fill this field with your token. Note that the token will not be saved.
+ 6. The lower half of the form shows the content that will be published to the network.
+ 7. Click on Create claim to publish your work.
+
+To retrieve claim:
+ 1. M-x poet-retrieve-works
+ 2. A list of all claims will be displayed.
+ 3. Select the desired work/claim from the list and press return to view the work.
+ 
+
+** Tips
+
++ It is possible to create a claim on a marked region in a buffer. Just highlight the region and execute poet-create-claim.
+
+
+* Development
+
+Bug reports, feature requests, suggestions and pull requests are more than welcome
+
+* License
+
+GPLv3
+
+# Local Variables:
+# eval: (require 'org-make-toc)
+# before-save-hook: org-make-toc
+# org-export-with-properties: ()
+# org-export-with-title: t
+# End:
