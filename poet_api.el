@@ -189,7 +189,7 @@
 
 
 (define-derived-mode poet-mode tabulated-list-mode "po.et-mode" "Major mode Po.et mode"
-  (define-key tabulated-list-mode-map (kbd "RET") 'poet-open-work)
+  (define-key tabulated-list-mode-map (kbd "RET") (lambda () (interactive) (poet-open-work)))
   (use-local-map tabulated-list-mode-map)
   (setq tabulated-list-format [("name" 50 t)
                                ("Author" 30 nil)
@@ -204,8 +204,6 @@
   (tabulated-list-init-header))
 
 (defun poet-open-work ()
-  (interactive)
-
   (setq index (tabulated-list-get-id))
   (setq content-header (aref poet-works index))
   (setq url (assoc-default 'archiveUrl content-header))
