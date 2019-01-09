@@ -27,6 +27,16 @@
 
 ;;; code:
 
+
+;;;; Requirements
+
+(require 'widget)
+(require 'wid-edit)
+(require 'request)
+
+
+;;;; Customization
+
 (defcustom poet-api-url "https://api.poetnetwork.net/works" "POET API URL"
   :type '(string)
   :group 'Po.et
@@ -36,6 +46,9 @@
   :type '(string)
   :group 'Po.et
   )
+
+
+;;;; Variables
 
 (defvar poet-works nil "Data structure for Po.et works")
 
@@ -47,12 +60,6 @@
         (buffer-substring-no-properties (region-beginning) (region-end))
       (buffer-substring-no-properties (point-min) (point-max) )))
   )
-
-(require 'widget)
-
-(eval-when-compile
-  (require 'wid-edit))
-
 
 (defun poet-create-claim-form (buf)
   "Create PO.ET claim form."
@@ -135,7 +142,6 @@
 
 (defun poet-create-claim-request (name date-c date-p author tags content)
   "Create cleam on poet network."
-  (require 'request)
   (custom-set-variables '(request-log-level 'debug )
                         '(request-message-level 'debug))
 
@@ -154,9 +160,10 @@
 (defun poet-retrieve-works ()
   "Create cleam on poet network."
   (interactive)
-  (require 'request)
-  (custom-set-variables '(request-log-level 'debug )
-                        '(request-message-level 'debug))
+
+  ;; (custom-set-variables '(request-log-level 'debug )
+  ;;                       '(request-message-level 'debug))
+  
   (setq response nil)
 
   (request
