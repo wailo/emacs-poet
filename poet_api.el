@@ -141,8 +141,6 @@
 
 (defun poet-create-claim-request (name date-c date-p author tags content)
   "Create cleam on poet network."
-  (custom-set-variables '(request-log-level 'debug)
-                        '(request-message-level 'debug))
 
   (message (request
             poet-api-url
@@ -159,9 +157,6 @@
 (defun poet-retrieve-works ()
   "Create cleam on poet network."
   (interactive)
-
-  ;; (custom-set-variables '(request-log-level 'debug )
-  ;;                       '(request-message-level 'debug))
 
   (request
    poet-api-url
