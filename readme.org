@@ -61,4 +61,4 @@ To retrieve claim:
 
 * Development
 
-Bug reports, feature requests, suggestions and pull requests are more than welcome
+With consideration that this is my first development in elisp, I do welcome bug reports, feature requests, suggestions and pull requests.
