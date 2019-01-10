@@ -50,6 +50,10 @@
   :type '(string)
   :group 'Po.et)
 
+(defcustom poet-enable-logs nil  "Enable verbose ouput for debugging and development."
+  :type '(integer)
+  :group 'Po.et)
+
 
 ;;;; Variables
 
@@ -173,22 +177,30 @@ AUTHOR published work author
 TAGS published work tags
 CONTENT published work content"
 
-  (message (request
-            poet-api-url
-            :type "POST"
-            :data (json-encode `(("name" . ,name) ("dateCreated" . ,date-c)
-                                 ("datePublished" . ,date-p) ("author" . ,author) ("tags" . ,tags) ("content" . ,content)))
-            :headers `(("Content-Type" . "application/json") ("token" . ,poet-api-token))
-            :parser 'json-read
-            :success (cl-function
-                      (lambda (&key data &allow-other-keys)
-                        (message "Work Id: %S" (assoc-default 'workId data)))))))
+
+  (if poet-enable-logs (progn (custom-set-variables '(request-log-level 'blather)
+                                                    '(request-message-level 'blather))))
+
+  (request
+   poet-api-url
+   :type "POST"
+   :data (json-encode `(("name" . ,name) ("dateCreated" . ,date-c)
+                        ("datePublished" . ,date-p) ("author" . ,author) ("tags" . ,tags) ("content" . ,content)))
+   :headers `(("Content-Type" . "application/json") ("token" . ,poet-api-token))
+   :parser 'json-read
+   :success (cl-function
+             (lambda (&key data &allow-other-keys)
+               (message "Work Id: %S" (assoc-default 'workId data))))))
 
 ;;;###autoload
 (defun poet-retrieve-works ()
   "Retrieve works from Po.et network"
   (interactive)
   (set-prompt-api-token)
+
+  (if poet-enable-logs (progn (custom-set-variables '(request-log-level 'blather)
+                                                    '(request-message-level 'blather))))
+
   (request
    poet-api-url
    :type "GET"
