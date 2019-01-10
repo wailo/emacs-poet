@@ -9,8 +9,7 @@ The client supoprt the following functionalities:
  2. View list of published works using easy to use user interface
 
 ** Screenshots
-
-screenshot1.png
+file:poet-create-claim.gif
 
 * Installation
 :PROPERTIES:
