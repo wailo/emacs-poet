@@ -54,7 +54,10 @@
 ;;;; Variables
 
 (defvar poet-works nil "Data structure for Po.et works.")
+(defvar poet-last-windows nil "Last window configuration.")
 
+
+;;;; Functions
 
 (defun get-content (buf)
   "Get content in a selectd region or the whole buffer.
@@ -125,7 +128,9 @@ BUF Target buffer where content will be extracted"
   (widget-insert " ")
   (widget-create 'push-button
                  :notify (lambda (&rest ignore)
-                           (kill-buffer (current-buffer)))
+                           (kill-buffer (current-buffer))
+                           ; Restore window configuration
+                           (set-window-configuration poet-last-windows))
                  "Exit")
 
   (widget-insert "\n\n")
@@ -142,6 +147,8 @@ BUF Target buffer where content will be extracted"
   "Create cleam on Po.et network."
 
   (interactive)
+  ; Save the current window configuration
+  (setq poet-last-windows (current-window-configuration))
   (setq content-buf (current-buffer))
   (with-temp-buffer "*Po.et Claim*"
                     (switch-to-buffer-other-window "*Po.et Claim*")
