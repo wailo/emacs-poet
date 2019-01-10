@@ -90,7 +90,7 @@ BUF Target buffer where content will be extracted"
   (let ((inhibit-read-only t))
     (erase-buffer))
   (remove-overlays)
-  (widget-insert (propertize "PO.ET\n\n" 'face 'info-title-1))
+  (widget-insert (propertize "Po.et\n\n" 'face 'info-title-1))
 
   (if (string-blank-p poet-api-token)
       (progn
@@ -126,31 +126,39 @@ BUF Target buffer where content will be extracted"
                               ""))
   (widget-insert "\n")
 
-  (widget-create 'push-button
-                 :notify (lambda (&rest ignore)
-                           (if (not poet-api-token)
-                               (setq poet-api-token (widget-value w_api_token))
-                             )
 
-                           (poet-create-claim-request (poet-remove-quotes (widget-value w_name))
-                                                      (poet-remove-quotes (widget-value w_date_c))
-                                                      (poet-remove-quotes (widget-value w_date_p))
-                                                      (poet-remove-quotes (widget-value w_author))
-                                                      (poet-remove-quotes (widget-value w_tags))
-                                                      content))
-                 "Create claim")
-  (widget-insert " ")
-  (widget-create 'push-button
-                 :notify (lambda (&rest ignore)
-                           (kill-buffer (current-buffer))
-                           ; Restore window configuration
-                           (set-window-configuration poet-last-windows))
-                 "Exit")
+  (defun poet-send-form (&rest ignore)
+    (if (not poet-api-token)
+        (setq poet-api-token (widget-value w_api_token)))
 
+    (poet-create-claim-request (poet-remove-quotes (widget-value w_name))
+                               (poet-remove-quotes (widget-value w_date_c))
+                               (poet-remove-quotes (widget-value w_date_p))
+                               (poet-remove-quotes (widget-value w_author))
+                               (poet-remove-quotes (widget-value w_tags))
+                         content))
+
+  (widget-create 'push-button
+                 :notify 'poet-send-form
+                 "Create claim [C-c C-c]")
+  (widget-insert "    ")
+
+  (defun  poet-kill-form (&rest ignore)
+    (kill-buffer (current-buffer))
+    ;; Restore window configuration
+    (set-window-configuration poet-last-windows))
+
+  (widget-create 'push-button
+                 :notify  'poet-kill-form
+                 "Exit [q]")
+  (widget-insert "\n")
+  (widget-insert (make-string 80 ?\u2501))
   (widget-insert "\n\n")
   (widget-insert (propertize "Content" 'face 'info-title-2))
   (widget-insert "\n-------------------------------------------\n")
   (widget-insert (format "%s" content))
+  (define-key widget-keymap (kbd "C-c C-c") (lambda () (interactive) (poet-send-form)))
+  (define-key widget-keymap (kbd "q") (lambda () (interactive) (poet-kill-form)))
   (use-local-map widget-keymap)
   (widget-setup)
   (beginning-of-buffer))
