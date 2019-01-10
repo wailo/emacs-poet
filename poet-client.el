@@ -50,6 +50,10 @@
   :type '(string)
   :group 'Po.et)
 
+(defcustom poet-default-author ""  "Default author for claim form."
+  :type '(string)
+  :group 'Po.et)
+
 (defcustom poet-enable-logs nil  "Enable verbose ouput for debugging and development."
   :type '(integer)
   :group 'Po.et)
@@ -119,7 +123,7 @@ BUF Target buffer where content will be extracted"
   (setq w_author (widget-create 'editable-field
                                 :size 13
                                 :format "Author:\t\t%v\n" ; Text after the field!
-                                ""))
+                                poet-default-author))
   (setq w_tags (widget-create 'editable-field
                               :size 13
                               :format "Tags:\t\t%v\n" ; Text after the field!
