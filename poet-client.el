@@ -82,7 +82,7 @@ BUF Target buffer where content will be extracted"
       (buffer-substring-no-properties (point-min) (point-max)))))
 
 (defun poet-remove-quotes (str)
-"Remove surrounding quotes from a string
+"Remove surrounding quotes from a string.
 STR string"
 (string-remove-suffix "\"" (string-remove-prefix "\"" str)))
 
@@ -206,7 +206,7 @@ CONTENT published work content"
 
 ;;;###autoload
 (defun poet-retrieve-works ()
-  "Retrieve works from Po.et network"
+  "Retrieve works from Po.et network."
   (interactive)
   (set-prompt-api-token)
 
