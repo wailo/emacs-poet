@@ -68,6 +68,12 @@ BUF Target buffer where content will be extracted"
         (buffer-substring-no-properties (region-beginning) (region-end))
       (buffer-substring-no-properties (point-min) (point-max)))))
 
+
+(defun poet-remove-quotes (str)
+"Remove surrounding quotes from a string
+STR string"
+(string-remove-suffix "\"" (string-remove-prefix "\"" str)))
+
 (defun poet-create-claim-form (buf)
   "Create ui for Po.et claim form.
 BUF Target buffer where content will be extracted"
@@ -118,11 +124,11 @@ BUF Target buffer where content will be extracted"
                                (setq poet-api-token (widget-value w_api_token))
                              )
 
-                           (poet-create-claim-request (widget-value w_name)
-                                                      (widget-value w_date_c)
-                                                      (widget-value w_date_p)
-                                                      (widget-value w_author)
-                                                      (widget-value w_tags)
+                           (poet-create-claim-request (poet-remove-quotes (widget-value w_name))
+                                                      (poet-remove-quotes (widget-value w_date_c))
+                                                      (poet-remove-quotes (widget-value w_date_p))
+                                                      (poet-remove-quotes (widget-value w_author))
+                                                      (poet-remove-quotes (widget-value w_tags))
                                                       content))
                  "Create claim")
   (widget-insert " ")
