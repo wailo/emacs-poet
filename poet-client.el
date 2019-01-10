@@ -59,6 +59,11 @@
 
 ;;;; Functions
 
+(defun set-prompt-api-token ()
+  "Set api-token, prompt user if empty."
+  (while (string-blank-p poet-api-token)
+    (setq poet-api-token (read-string "Enter Po.et API token: "))))
+
 (defun get-content (buf)
   "Get content in a selectd region or the whole buffer.
 BUF Target buffer where content will be extracted"
@@ -67,7 +72,6 @@ BUF Target buffer where content will be extracted"
     (if (region-active-p)
         (buffer-substring-no-properties (region-beginning) (region-end))
       (buffer-substring-no-properties (point-min) (point-max)))))
-
 
 (defun poet-remove-quotes (str)
 "Remove surrounding quotes from a string
@@ -84,7 +88,7 @@ BUF Target buffer where content will be extracted"
   (remove-overlays)
   (widget-insert (propertize "PO.ET\n\n" 'face 'info-title-1))
 
-  (if (not poet-api-token)
+  (if (string-blank-p poet-api-token)
       (progn
         (setq w_api_token (widget-create 'editable-field
                        :size 98
@@ -184,6 +188,7 @@ CONTENT published work content"
 (defun poet-retrieve-works ()
   "Retrieve works from Po.et network"
   (interactive)
+  (set-prompt-api-token)
   (request
    poet-api-url
    :type "GET"
