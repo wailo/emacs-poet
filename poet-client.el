@@ -41,6 +41,9 @@
 
 
 ;;;; Customization
+(defgroup po.et nil
+  "Client for po.et network api."
+  :group 'Applications)
 
 (defcustom poet-api-url "https://api.poetnetwork.net/works" "po.et api url."
   :type '(string)
