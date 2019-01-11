@@ -9,8 +9,11 @@ The client supoprt the following functionalities:
  2. View list of published works using easy to use user interface
 
 ** Screenshots
+Create a claim
 [[file:poet-create-claim.gif]]
 
+Retrieve and view content of published work
+[[file:poet-retrieve-works.gif]]
 * Installation
 :PROPERTIES:
 :TOC:      0
