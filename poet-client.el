@@ -84,10 +84,10 @@ BUF Target buffer where content will be extracted"
         (buffer-substring-no-properties (region-beginning) (region-end))
       (buffer-substring-no-properties (point-min) (point-max)))))
 
-(defun poet-remove-quotes (str)
-"Remove surrounding quotes from a string.
+(defun poet-remove-quotes-spaces (str)
+"Remove surrounding quotes and spaces from a string.
 STR string"
-(string-remove-suffix "\"" (string-remove-prefix "\"" str)))
+(string-remove-suffix "\"" (string-remove-prefix "\"" (string-trim str))))
 
 (defun poet-create-claim-form (buf)
   "Create ui for po.et claim form.
@@ -148,11 +148,11 @@ BUF Target buffer where content will be extracted"
     (if (not poet-api-token)
         (setq poet-api-token (widget-value w_api_token)))
 
-    (poet-create-claim-request (poet-remove-quotes (widget-value w_name))
-                               (poet-remove-quotes (widget-value w_date_c))
-                               (poet-remove-quotes (widget-value w_date_p))
-                               (poet-remove-quotes (widget-value w_author))
-                               (poet-remove-quotes (widget-value w_tags))
+    (poet-create-claim-request (poet-remove-quotes-spaces (widget-value w_name))
+                               (poet-remove-quotes-spaces (widget-value w_date_c))
+                               (poet-remove-quotes-spaces (widget-value w_date_p))
+                               (poet-remove-quotes-spaces (widget-value w_author))
+                               (poet-remove-quotes-spaces (widget-value w_tags))
                          content))
 
   (widget-create 'push-button
