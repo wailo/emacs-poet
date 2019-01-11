@@ -111,7 +111,7 @@ BUF Target buffer where content will be extracted"
                        ""))
         (widget-insert "    ")
         (widget-create 'push-button
-                       :notify (lambda (&rest ignore) (if (yes-or-no-p "Do you want to remember the token for later sessions?")
+                       :notify (lambda (&rest ignore) (if (yes-or-no-p "Do you want to remember the token for later sessions? ")
                                                          (setq poet-api-token (widget-value w_api_token)))) "Remember for later sessions")
                 (widget-insert "\n")))
 
@@ -130,8 +130,13 @@ BUF Target buffer where content will be extracted"
                                 (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
   (setq w_author (widget-create 'editable-field
                                 :size 13
-                                :format "Author:\t\t%v\n" ; Text after the field!
+                                :format "Author:\t\t%v" ; Text after the field!
                                 poet-default-author))
+  (widget-insert "    ")
+  (widget-create 'push-button
+                 :notify (lambda (&rest ignore) (if (yes-or-no-p "Do you want to remember the author for later sessions? ")
+                                                    (setq poet-default-author (widget-value w_author)))) "Remember for later sessions")
+  (widget-insert "\n")
   (setq w_tags (widget-create 'editable-field
                               :size 13
                               :format "Tags:\t\t%v\n" ; Text after the field!
