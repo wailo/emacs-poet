@@ -31,7 +31,7 @@ Retrieve and view claims
   + request
   + widget
 
-  Then put poet-client.el in your load-path, and add this in .Emacs init file:
+  Then place poet-client.el in your load-path, and add this line in .emacs init file:
 
   #+BEGIN_SRC elisp
 (require 'poet-client)
@@ -42,9 +42,7 @@ Retrieve and view claims
 :TOC:      0
 :END:
 
- 1. This is the only required step. Get an API token by following instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html
- 2. Optional: In Emacs @@html:<kbd>@@M-x@@html:</kbd>@@ ~customize group~ ~po.et~ then fill the API token. *Warning:* this will save your token in .Emacs config file. Ignore this step if you do not want the token to be saved. You will be prompted when creating a claim.
- 3. Optional: Fill the default author field, then it will be autofilled in the form.
+This is the only required step. Get an API token by following instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html
 
 * Usage
 :PROPERTIES:
@@ -55,8 +53,9 @@ Retrieve and view claims
  1. Activate the buffer that contains the content for publishing.
  2. In Emacs: @@html:<kbd>@@M-x@@html:</kbd>@@ ~poet-register-claim~
  3. A Form will be displayed and the staged content will be displayed in the bottom half.
- 4. Fill the form. an API token field will be displayed if the token is not configured. In this case you will need to fill this field with your token. Note that the token will not be remembered.
- 5. Click on Create claim to publish your work.
+ 4. Fill the form.
+ 5. A field for api token will be displayed if the token is not saved, in this case you will need to fill this field. The api will not be saved unless you click on (remmeber for later sessions) button which will prompt you for confirmation.
+ 6. Click on Create claim to publish your work.
 
 ***  Retrieve your claim:
  1. @@html:<kbd>@@M-x@@html:</kbd>@@ ~poet-retrieve-works~
