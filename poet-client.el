@@ -1,16 +1,16 @@
-;;; poet-client.el --- Client for Po.et network api  -*- lexical-binding: t; -*-
+;;; poet-client.el --- Client for po.et network api  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 W.Yahia
 
 ;; Author: W.Yahia
 ;; Version: 0.1-pre
 ;; Package-Requires: ((widget) (wid-edit) (request))
-;; Keywords: Po.et blockchain publishing
+;; Keywords: po.et blockchain publishing
 ;; URL: https://github.com/wailo/emacs-poet
 
 ;;; Commentary:
 
-;; This package provide a client to Po.et network api.
+;; This package provide a client to po.et network api.
 ;; The can publish work to the network and list published works
 
 ;; This file is not part of GNU Emacs.
@@ -42,26 +42,26 @@
 
 ;;;; Customization
 
-(defcustom poet-api-url "https://api.poetnetwork.net/works" "Po.et api url."
+(defcustom poet-api-url "https://api.poetnetwork.net/works" "po.et api url."
   :type '(string)
-  :group 'Po.et)
+  :group 'po.et)
 
-(defcustom poet-api-token "" "Po.et api Authentication token."
+(defcustom poet-api-token "" "po.et api Authentication token."
   :type '(string)
-  :group 'Po.et)
+  :group 'po.et)
 
 (defcustom poet-default-author ""  "Default author for claim form."
   :type '(string)
-  :group 'Po.et)
+  :group 'po.et)
 
 (defcustom poet-enable-logs nil  "Enable verbose ouput for debugging and development."
   :type '(integer)
-  :group 'Po.et)
+  :group 'po.et)
 
 
 ;;;; Variables
 
-(defvar poet-works nil "Data structure for Po.et works.")
+(defvar poet-works nil "Data structure for po.et works.")
 (defvar poet-last-windows nil "Last window configuration.")
 
 
@@ -70,7 +70,7 @@
 (defun set-prompt-api-token ()
   "Set api-token, prompt user if empty."
   (while (string-blank-p poet-api-token)
-    (setq poet-api-token (read-string "Enter Po.et API token: "))))
+    (setq poet-api-token (read-string "Enter po.et API token: "))))
 
 (defun get-content (buf)
   "Get content in a selectd region or the whole buffer.
@@ -87,14 +87,14 @@ STR string"
 (string-remove-suffix "\"" (string-remove-prefix "\"" str)))
 
 (defun poet-create-claim-form (buf)
-  "Create ui for Po.et claim form.
+  "Create ui for po.et claim form.
 BUF Target buffer where content will be extracted"
 
   (setq content (get-content buf))
   (let ((inhibit-read-only t))
     (erase-buffer))
   (remove-overlays)
-  (widget-insert (propertize "Po.et\n\n" 'face 'info-title-1))
+  (widget-insert (propertize "po.et\n\n" 'face 'info-title-1))
 
   (if (string-blank-p poet-api-token)
       (progn
@@ -170,14 +170,14 @@ BUF Target buffer where content will be extracted"
 
 ;;;###autoload
 (defun poet-create-claim ()
-  "Create cleam on Po.et network."
+  "Create cleam on po.et network."
 
   (interactive)
   ; Save the current window configuration
   (setq poet-last-windows (current-window-configuration))
   (setq content-buf (current-buffer))
-  (with-temp-buffer "*Po.et Claim*"
-                    (switch-to-buffer-other-window "*Po.et Claim*")
+  (with-temp-buffer "*po.et Claim*"
+                    (switch-to-buffer-other-window "*po.et Claim*")
                     (poet-create-claim-form content-buf)))
 
 (defun poet-create-claim-request (name date-c date-p author tags content)
@@ -208,7 +208,7 @@ CONTENT published work content"
 
 ;;;###autoload
 (defun poet-retrieve-works ()
-  "Retrieve works from Po.et network."
+  "Retrieve works from po.et network."
   (interactive)
   (set-prompt-api-token)
 
@@ -246,7 +246,7 @@ WORK work entry"
           ))
 
 
-(define-derived-mode poet-mode tabulated-list-mode "Po.et-mode" "Major mode for Po.et UI menu of publised works"
+(define-derived-mode poet-mode tabulated-list-mode "po.et-mode" "Major mode for po.et UI menu of publised works"
   (define-key tabulated-list-mode-map (kbd "RET") (lambda () (interactive) (poet-get-selected-work-from-url)))
   (use-local-map tabulated-list-mode-map)
   (setq tabulated-list-format [("name" 50 t)
@@ -290,14 +290,14 @@ CONTENT the body/content of the published work"
         (hash (assoc-default 'hash content-header))
         (archiveUrl (assoc-default 'archiveUrl content-header)))
 
-  (with-output-to-temp-buffer (format "*Po.et %s" name)
+  (with-output-to-temp-buffer (format "*po.et %s" name)
     (print (format "Name: %s\nAuthor: %s\nCreationDate: %s\nPublicationDate: %s\nTags: %s\nHash: %s \nURL: %s\n\nContent:\n%s" name author dateCreated datePublished tags hash archiveUrl content)))))
 
 (defun poet-works-list-popup (poet-works-list)
   "List published works in a popup.
 POET-WORKS-LIST list of published works"
 
-  (pop-to-buffer "*Po.et Works*" nil)
+  (pop-to-buffer "*po.et Works*" nil)
   (poet-mode)
   (setq tabulated-list-entries poet-works-list)
   (tabulated-list-print t))

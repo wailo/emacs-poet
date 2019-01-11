@@ -1,9 +1,9 @@
-* Po.et API client
+* po.et API client
 :PROPERTIES:
 :TOC:      ignore
 :END:
 
-This is an emacs client for Po.et blockchain (https://www.po.et). A decentralized protocol for content ownership, discovery and monetization in media
+This is an emacs client for po.et blockchain (https://www.po.et). A decentralized protocol for content ownership, discovery and monetization in media
 The client supoprt the following functionalities:
  1. Create and publish work wihtin emacs, using a content of a buffer.
  2. View list of published works using easy to use user interface
@@ -43,7 +43,7 @@ In progess
 
 To register a claim:
  1. Get API token by following instructions here: https://docs.poetnetwork.net/use-poet/create-your-first-claim.html
- 2. In emacs: M-x -> customize group -> Po.et and then fill the api token. Warning: this will save your token in emacs config file. If you do not want your token to be saved, then ignore this step.
+ 2. In emacs: M-x -> customize group -> po.et and then fill the api token. Warning: this will save your token in emacs config file. If you do not want your token to be saved, then ignore this step.
  3. Open the file and make the buffer active.
  4. M-x poet-create-claim
  5. Fill the form. an API token field will be displayed if the token is not saved in emacs config. In this case you will need to fill this field with your token. Note that the token will not be saved.
