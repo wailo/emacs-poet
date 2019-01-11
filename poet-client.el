@@ -169,8 +169,8 @@ BUF Target buffer where content will be extracted"
 
 
 ;;;###autoload
-(defun poet-create-claim ()
-  "Create cleam on po.et network."
+(defun poet-register-claim ()
+  "Register cleam on po.et network."
 
   (interactive)
   ; Save the current window configuration
@@ -181,7 +181,7 @@ BUF Target buffer where content will be extracted"
                     (poet-create-claim-form content-buf)))
 
 (defun poet-create-claim-request (name date-c date-p author tags content)
-  "Create cleam on poet network.
+  "Register a claim on po.et network.
 NAME published work name
 DATE-C published work creation date
 DATE-P published work publication date
