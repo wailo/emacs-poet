@@ -191,7 +191,9 @@ CONTENT published work content"
 
 
   (if poet-enable-logs (progn (custom-set-variables '(request-log-level 'blather)
-                                                    '(request-message-level 'blather))))
+                                                    '(request-message-level 'blather)))
+    (progn (custom-set-variables '(request-log-level -1)
+                                 '(request-message-level -1))))
 
   (request
    poet-api-url
@@ -211,7 +213,9 @@ CONTENT published work content"
   (set-prompt-api-token)
 
   (if poet-enable-logs (progn (custom-set-variables '(request-log-level 'blather)
-                                                    '(request-message-level 'blather))))
+                                                    '(request-message-level 'blather)))
+    (progn (custom-set-variables '(request-log-level -1)
+                                 '(request-message-level -1))))
 
   (request
    poet-api-url
