@@ -101,6 +101,7 @@ BUF Target buffer where content will be extracted"
 
   (if (string-blank-p poet-api-token)
       (progn
+        (widget-insert "See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
         (setq w_api_token (widget-create 'editable-field
                        :size 98
                        :format "API Token:\t%v" ; Text after the field!
@@ -108,7 +109,11 @@ BUF Target buffer where content will be extracted"
                                                               (message "yes") ;; change API address and inform the user
                                                             (message "no")))
                        ""))
-        (widget-insert " See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")))
+        (widget-insert "    ")
+        (widget-create 'push-button
+                       :notify (lambda (&rest ignore) (if (yes-or-no-p "Do you want to remember the token for later sessions?")
+                                                         (setq poet-api-token (widget-value w_api_token)))) "Remember for later sessions")
+                (widget-insert "\n")))
 
   (setq w_name (widget-create 'editable-field
                               :size 13
