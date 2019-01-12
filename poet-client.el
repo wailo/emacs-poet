@@ -73,7 +73,7 @@
 (defun set-prompt-api-token ()
   "Set api-token, prompt user if empty."
   (while (string-blank-p poet-api-token)
-    (setq poet-api-token (read-string "Enter po.et API token: "))))
+    (setq poet-api-token (poet-remove-quotes-spaces (read-string "Enter po.et API token: ")))))
 
 (defun get-content (buf)
   "Get content in a selectd region or the whole buffer.
