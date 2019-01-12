@@ -40,15 +40,16 @@
 
 
 ;;;; Customization
+
 (defgroup po.et nil
   "Client for po.et network api."
   :group 'Applications)
 
-(defcustom poet-client-api-url "https://api.poetnetwork.net/works" "Po.et api url."
+(defcustom poet-client-api-url "https://api.poetnetwork.net/works" "API url."
   :type '(string)
   :group 'po.et)
 
-(defcustom poet-client-api-token "" "Po.et api Authentication token."
+(defcustom poet-client-api-token "" "API authentication token."
   :type '(string)
   :group 'po.et)
 
