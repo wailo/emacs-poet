@@ -5,10 +5,11 @@
 
 This is an Emacs client for [[https://www.po.et][po.et]]. A decentralized protocol for content ownership, discovery and monetization in media.
 The client allows a user to:
- 1. Create and publish work to po.et, using a content of a buffer wihtin Emacs.
+ 1. Create and publish work to po.et from Emacs.
  2. List and view published works.
 
 ** Screenshots
+
 Register a claim
 [[file:poet-create-claim.gif]]
 
@@ -49,25 +50,25 @@ This is the only required step. Get an API token by following instructions at ht
 :TOC:      0
 :END:
 
-*** Register your claim:
+*** Register a claim:
  1. Activate the buffer that contains the content for publishing.
- 2. In Emacs: @@html:<kbd>@@M-x@@html:</kbd>@@ ~poet-register-claim~
+ 2. In Emacs: @@html:<kbd>@@M-x@@html:</kbd>@@ ~poet-register-claim~.
  3. A Form will be displayed and the staged content will be displayed in the bottom half.
  4. Fill the form.
- 5. A field for api token will be displayed if the token is not saved, in this case you will need to fill this field. The api will not be saved unless you click on (remmeber for later sessions) button which will prompt you for confirmation.
- 6. Click on Create claim to publish your work.
+ 5. Click on Create claim to publish your work.
 
-***  Retrieve your claim:
+***  Retrieve a claim:
  1. @@html:<kbd>@@M-x@@html:</kbd>@@ ~poet-retrieve-works~
  2. All published works will be displayed in an interactive list.
- 3. Select the desired work from the list and press return to view it.
+ 3. Move to an item in the list and press @@html:<kbd>@@Return@@html:</kbd>@@ to view the content.
  
 
 ** Tips
 
-+ It is possible to create a claim on a marked region in a buffer. Just highlight the region and execute poet-create-claim.
++ It is possible make a claim on marked region in buffer. Just mark the region, then @@html:<kbd>@@M-x@@html:</kbd>@@ ~poet-register-claim~.
++ For convenience, API token and the author name can be stored in Emacs init file, then they will be autofilled in the form. This can be done via the Emacs customization menu or in the claim form which has a remember option next to the fields.
 
 
 * Development
 
-With consideration that this is my first development in elisp, I do welcome bug reports, feature requests, suggestions and pull requests.
+I do welcome bug reports, feature requests, suggestions and pull requests.
