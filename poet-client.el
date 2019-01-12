@@ -104,14 +104,14 @@ BUF Target buffer where content will be extracted"
         (setq w_api_token (widget-create 'editable-field
                        :size 98
                        :format "API Token:\t%v" ; Text after the field!
-                       :notify (lambda (wid &rest ignore) (if (string-prefix-p "TEST" (widget-value wid))
+                       :notify (lambda (wid &rest _ignore) (if (string-prefix-p "TEST" (widget-value wid))
                                                               (message "yes") ;; change API address and inform the user
                                                             (message "no")))
                        ""))
         (widget-insert "    ")
         (widget-create 'push-button
-                       :notify (lambda (&rest ignore) (if (yes-or-no-p "Do you want to remember the token for later sessions? ")
-                                                         (setq poet-client-api-token (widget-value w_api_token)))) "Remember for later sessions")
+                       :notify (lambda (&rest _ignore) (if (yes-or-no-p "Do you want to remember the token for later sessions? ")
+                                                         (custom-set-variables '(poet-client-api-token (widget-value w_api_token))))) "Remember for later sessions")
                 (widget-insert "\n")))
 
   (setq w_name (widget-create 'editable-field
@@ -133,8 +133,8 @@ BUF Target buffer where content will be extracted"
                                 poet-client-default-author))
   (widget-insert "    ")
   (widget-create 'push-button
-                 :notify (lambda (&rest ignore) (if (yes-or-no-p "Do you want to remember the author for later sessions? ")
-                                                    (setq poet-client-default-author (widget-value w_author)))) "Remember for later sessions")
+                 :notify (lambda (&rest _ignore) (if (yes-or-no-p "Do you want to remember the author for later sessions? ")
+                                                    (custom-set-variables '(poet-client-default-author (widget-value w_author))))) "Remember for later sessions")
   (widget-insert "\n")
   (setq w_tags (widget-create 'editable-field
                               :size 13
@@ -143,23 +143,23 @@ BUF Target buffer where content will be extracted"
   (widget-insert "\n")
 
 
-  (defun poet-client-send-form (&rest ignore)
+  (defun poet-client-send-form (&rest _ignore)
     (if (not poet-client-api-token)
         (setq poet-client-api-token (widget-value w_api_token)))
 
     (poet-client-create-claim-request (poet-client-remove-quotes-spaces (widget-value w_name))
-                               (poet-client-remove-quotes-spaces (widget-value w_date_c))
-                               (poet-client-remove-quotes-spaces (widget-value w_date_p))
-                               (poet-client-remove-quotes-spaces (widget-value w_author))
-                               (poet-client-remove-quotes-spaces (widget-value w_tags))
-                         content))
+                                      (poet-client-remove-quotes-spaces (widget-value w_date_c))
+                                      (poet-client-remove-quotes-spaces (widget-value w_date_p))
+                                      (poet-client-remove-quotes-spaces (widget-value w_author))
+                                      (poet-client-remove-quotes-spaces (widget-value w_tags))
+                                      content))
 
   (widget-create 'push-button
                  :notify 'poet-client-send-form
                  "Create claim [C-c C-c]")
   (widget-insert "    ")
 
-  (defun  poet-client-kill-form (&rest ignore)
+  (defun  poet-client-kill-form (&rest _ignore)
     (kill-buffer (current-buffer))
     ;; Restore window configuration
     (set-window-configuration poet-client-last-windows))
