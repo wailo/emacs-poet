@@ -102,7 +102,7 @@ BUF Target buffer where content will be extracted"
   (if (string-blank-p poet-client-api-token)
       (progn
         (widget-insert "See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
-        (setq w_api_token (widget-create 'editable-field
+        (setq w-api-token (widget-create 'editable-field
                        :size 98
                        :format "API Token:\t%v" ; Text after the field!
                        :notify (lambda (wid &rest _ignore) (if (string-prefix-p "TEST" (widget-value wid))
@@ -112,32 +112,32 @@ BUF Target buffer where content will be extracted"
         (widget-insert "    ")
         (widget-create 'push-button
                        :notify (lambda (&rest _ignore) (if (yes-or-no-p "Do you want to remember the token for later sessions? ")
-                                                         (customize-save-variable 'poet-client-api-token (widget-value w_api_token)))) "Remember for later sessions")
+                                                         (customize-save-variable 'poet-client-api-token (widget-value w-api-token)))) "Remember for later sessions")
                 (widget-insert "\n")))
 
-  (setq w_name (widget-create 'editable-field
+  (setq w-name (widget-create 'editable-field
                               :size 13
                               :format "Name:\t\t%v\n" ; Text after the field!
                               ""))
-  (setq w_date_c (widget-create 'editable-field
+  (setq w-date-c (widget-create 'editable-field
                                 :size 13
                                 :format "Date Created:\t%v\n" ; Text after the field!
                                 (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
 
-  (setq w_date_p (widget-create 'editable-field
+  (setq w-date-p (widget-create 'editable-field
                                 :size 13
                                 :format "Date Published:\t%v\n" ; Text after the field!
                                 (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
-  (setq w_author (widget-create 'editable-field
+  (setq w-author (widget-create 'editable-field
                                 :size 13
                                 :format "Author:\t\t%v" ; Text after the field!
                                 poet-client-default-author))
   (widget-insert "    ")
   (widget-create 'push-button
                  :notify (lambda (&rest _ignore) (if (yes-or-no-p "Do you want to remember the author for later sessions? ")
-                                                    (customize-save-variable 'poet-client-default-author (widget-value w_author)))) "Remember for later sessions")
+                                                    (customize-save-variable 'poet-client-default-author (widget-value w-author)))) "Remember for later sessions")
   (widget-insert "\n")
-  (setq w_tags (widget-create 'editable-field
+  (setq w-tags (widget-create 'editable-field
                               :size 13
                               :format "Tags:\t\t%v\n" ; Text after the field!
                               ""))
@@ -146,13 +146,13 @@ BUF Target buffer where content will be extracted"
 
   (defun poet-client-send-form (&rest _ignore)
     (if (not poet-client-api-token)
-        (setq poet-client-api-token (widget-value w_api_token)))
+        (setq poet-client-api-token (widget-value w-api-token)))
 
-    (poet-client-create-claim-request (poet-client-remove-quotes-spaces (widget-value w_name))
-                                      (poet-client-remove-quotes-spaces (widget-value w_date_c))
-                                      (poet-client-remove-quotes-spaces (widget-value w_date_p))
-                                      (poet-client-remove-quotes-spaces (widget-value w_author))
-                                      (poet-client-remove-quotes-spaces (widget-value w_tags))
+    (poet-client-create-claim-request (poet-client-remove-quotes-spaces (widget-value w-name))
+                                      (poet-client-remove-quotes-spaces (widget-value w-date-c))
+                                      (poet-client-remove-quotes-spaces (widget-value w-date-p))
+                                      (poet-client-remove-quotes-spaces (widget-value w-author))
+                                      (poet-client-remove-quotes-spaces (widget-value w-tags))
                                       content))
 
   (widget-create 'push-button
