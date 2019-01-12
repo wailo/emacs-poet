@@ -112,7 +112,7 @@ BUF Target buffer where content will be extracted"
         (widget-insert "    ")
         (widget-create 'push-button
                        :notify (lambda (&rest _ignore) (if (yes-or-no-p "Do you want to remember the token for later sessions? ")
-                                                         (custom-set-variables '(poet-client-api-token (widget-value w_api_token))))) "Remember for later sessions")
+                                                         (customize-save-variable 'poet-client-api-token (widget-value w_api_token)))) "Remember for later sessions")
                 (widget-insert "\n")))
 
   (setq w_name (widget-create 'editable-field
@@ -135,7 +135,7 @@ BUF Target buffer where content will be extracted"
   (widget-insert "    ")
   (widget-create 'push-button
                  :notify (lambda (&rest _ignore) (if (yes-or-no-p "Do you want to remember the author for later sessions? ")
-                                                    (custom-set-variables '(poet-client-default-author (widget-value w_author))))) "Remember for later sessions")
+                                                    (customize-save-variable 'poet-client-default-author (widget-value w_author)))) "Remember for later sessions")
   (widget-insert "\n")
   (setq w_tags (widget-create 'editable-field
                               :size 13
