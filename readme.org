@@ -65,7 +65,7 @@ This is the only required step. Get an API token by following instructions at ht
 
 ** Tips
 
-+ It is possible make a claim on marked region in buffer. Just mark the region, then @@html:<kbd>@@M-x@@html:</kbd>@@ ~poet-register-claim~.
++ It is possible make a claim on marked region in buffer. Just mark the region before creating a claim.
 + For convenience, API token and the author name can be stored in Emacs init file, then they will be autofilled in the form. This can be done via the Emacs customization menu or in the claim form which has a remember option next to the fields.
 
 
