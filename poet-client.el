@@ -177,7 +177,7 @@ BUF Target buffer where content will be extracted"
   (define-key widget-keymap (kbd "q") (lambda () (interactive) (poet-client-kill-form)))
   (use-local-map widget-keymap)
   (widget-setup)
-  (beginning-of-buffer))
+  (goto-char (point-min)))
 
 
 ;;;###autoload
@@ -243,8 +243,8 @@ CONTENT published work content"
   "Parse works json response and convert it to a list of vector.
 WORKS-JSON-RESPONSE api response of $API_URL/works"
 
-  (setq index 0)
-  (mapcar (lambda (work) (append (list (cl-incf index) (poet-client-parse-works-extract-values work)))) works-json-response))
+  (let ((index 0))
+  (mapcar (lambda (work) (append (list (cl-incf index) (poet-client-parse-works-extract-values work)))) works-json-response)))
 
 (defun poet-client-parse-works-extract-values (work)
   "Extract values from a single work entry.
