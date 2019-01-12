@@ -52,13 +52,13 @@ This is the only required step. Get an API token by following instructions at ht
 
 *** Register a claim:
  1. Activate the buffer that contains the content for publishing.
- 2. In Emacs: @@html:<kbd>@@M-x@@html:</kbd>@@ ~poet-register-claim~.
+ 2. In Emacs: @@html:<kbd>@@M-x@@html:</kbd>@@ ~poet-client-register-claim~.
  3. A Form will be displayed and the staged content will be displayed in the bottom half.
  4. Fill the form.
  5. Click on Create claim to publish your work.
 
 ***  Retrieve a claim:
- 1. @@html:<kbd>@@M-x@@html:</kbd>@@ ~poet-retrieve-works~
+ 1. @@html:<kbd>@@M-x@@html:</kbd>@@ ~poet-client-retrieve-works~
  2. All published works will be displayed in an interactive list.
  3. Move to an item in the list and press @@html:<kbd>@@Return@@html:</kbd>@@ to view the content.
  
