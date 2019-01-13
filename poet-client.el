@@ -152,7 +152,7 @@ BUF Target buffer where content will be extracted"
 
   (widget-create 'push-button
                  :notify 'poet-client-send-form
-                 "Create claim [C-c C-c]")
+                 "Create claim")
   (widget-insert "    ")
 
   (widget-create 'push-button
@@ -164,7 +164,6 @@ BUF Target buffer where content will be extracted"
   (widget-insert (propertize "Content" 'face 'info-title-2))
   (widget-insert "\n-------------------------------------------\n")
   (widget-insert (format "%s" content))
-  (define-key widget-keymap (kbd "C-c C-c") (lambda () (interactive) (poet-client-send-form)))
   (define-key widget-keymap (kbd "q") (lambda () (interactive) (poet-client-kill-form)))
   (use-local-map widget-keymap)
   (widget-setup)
