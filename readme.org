@@ -23,7 +23,7 @@ Retrieve and view claims
 
 ** MELPA
 
-   To-Do
+   In progress.
 
 ** Manual
 
@@ -35,7 +35,7 @@ Retrieve and view claims
   Then place poet-client.el in your load-path, and add this line in .emacs init file:
 
   #+BEGIN_SRC elisp
-(require 'poet-client)
+  (require 'poet-client)
   #+END_SRC
 
 * Configuration
