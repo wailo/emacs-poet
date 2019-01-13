@@ -151,12 +151,12 @@ BUF Target buffer where content will be extracted"
   (widget-insert "\n")
 
   (widget-create 'push-button
-                 :notify 'poet-client-send-form
+                 :notify #'poet-client-send-form
                  "Create claim")
   (widget-insert "    ")
 
   (widget-create 'push-button
-                 :notify  'poet-client-kill-form
+                 :notify  #'poet-client-kill-form
                  "Exit [q]")
   (widget-insert "\n")
   (widget-insert (make-string 80 ?\u2501))
