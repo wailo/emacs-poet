@@ -4,7 +4,7 @@
 
 ;; Author: W.Yahia
 ;; Version: 0.1-pre
-;; Package-Requires: ((emacs "24.4"))
+;; Package-Requires: ((emacs "24.4") (request "0.3.0"))
 ;; URL: https://github.com/wailo/emacs-poet
 
 ;;; Commentary:
