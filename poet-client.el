@@ -38,6 +38,7 @@
 (require 'wid-edit)
 (require 'request)
 (require 'subr-x)
+(require 'json)
 
 ;;;; Customization
 
