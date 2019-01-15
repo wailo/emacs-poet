@@ -110,7 +110,7 @@ BUF Target buffer where content will be extracted"
   (if (string-blank-p poet-client-api-token)
       (progn
         (widget-insert "See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
-        (defvar w-api-token (widget-create 'editable-field
+        (setq w-api-token (widget-create 'editable-field
                        :size 98
                        :format "API Token:\t%v" ; Text after the field!
                        :notify (lambda (wid &rest _ignore) (if (string-prefix-p "TEST" (widget-value wid))
@@ -145,7 +145,7 @@ BUF Target buffer where content will be extracted"
                  :notify (lambda (&rest _ignore) (if (yes-or-no-p "Do you want to remember the author for later sessions? ")
                                                     (customize-save-variable 'poet-client-default-author (widget-value w-author)))) "Remember for later sessions")
   (widget-insert "\n")
-  (defvar w-tags (widget-create 'editable-field
+  (setq w-tags (widget-create 'editable-field
                               :size 13
                               :format "Tags:\t\t%v\n" ; Text after the field!
                               ""))
