@@ -37,7 +37,7 @@
 (require 'widget)
 (require 'wid-edit)
 (require 'request)
-
+(require 'subr-x)
 
 ;;;; Customization
 
