@@ -111,7 +111,7 @@ BUF Target buffer where content will be extracted"
       (progn
         (widget-insert "See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
         (setq w-api-token (widget-create 'editable-field
-                       :size 98
+                       :size 1
                        :format "API Token:\t%v" ; Text after the field!
                        :notify (lambda (wid &rest _ignore) (if (string-prefix-p "TEST" (widget-value wid))
                                                               (message "yes") ;; change API address and inform the user
@@ -124,20 +124,20 @@ BUF Target buffer where content will be extracted"
                 (widget-insert "\n")))
 
   (setq w-name (widget-create 'editable-field
-                              :size 13
+                              :size 1
                               :format "Name:\t\t%v\n" ; Text after the field!
                               ""))
   (setq w-date-c (widget-create 'editable-field
-                                :size 13
+                                :size 1
                                 :format "Date Created:\t%v\n" ; Text after the field!
                                 (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
 
   (setq w-date-p (widget-create 'editable-field
-                                :size 13
+                                :size 1
                                 :format "Date Published:\t%v\n" ; Text after the field!
                                 (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
   (setq w-author (widget-create 'editable-field
-                                :size 13
+                                :size 1
                                 :format "Author:\t\t%v" ; Text after the field!
                                 poet-client-default-author))
   (widget-insert "    ")
@@ -146,7 +146,7 @@ BUF Target buffer where content will be extracted"
                                                     (customize-save-variable 'poet-client-default-author (widget-value w-author)))) "Remember for later sessions")
   (widget-insert "\n")
   (setq w-tags (widget-create 'editable-field
-                              :size 13
+                              :size 1
                               :format "Tags:\t\t%v\n" ; Text after the field!
                               ""))
   (widget-insert "\n")
