@@ -213,7 +213,8 @@ CONTENT published work content"
    :parser 'json-read
    :success (cl-function
              (lambda (&key data &allow-other-keys)
-               (message "Work Id: %S" (assoc-default 'workId data))))))
+               (message "Work Id: %S" (assoc-default 'workId data)))))
+  (message "Request sent. Pending response from the server"))
 
 ;;;###autoload
 (defun poet-client-retrieve-works ()
