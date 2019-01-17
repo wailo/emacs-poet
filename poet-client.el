@@ -9,10 +9,8 @@
 
 ;;; Commentary:
 
-;; This package provide a client to po.et network api.
-;; The can publish work to the network and list published works
-
-;; This file is not part of GNU Emacs.
+;; This is an Emacs client for po.et, a decentralized protocol for content ownership, discovery and monetization in media.
+;; The client allows a user to create, publish and list published works.
 
 ;;; License:
 
