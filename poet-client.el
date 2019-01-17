@@ -27,7 +27,6 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 ;;; code:
 
 ;;;; Requirements
@@ -60,12 +59,10 @@
   :type '(integer)
   :group 'po.et)
 
-
 ;;;; Variables
 
 (defvar poet-client-works nil "Data structure for po.et works.")
 (defvar poet-client-last-windows nil "Last window configuration.")
-
 
 ;;;; Functions
 
@@ -77,83 +74,77 @@
 (defun poet-client-get-content (buf)
   "Get content in a selectd region or the whole buffer.
 BUF Target buffer where content will be extracted"
-
   (with-current-buffer buf
     (if (region-active-p)
         (buffer-substring-no-properties (region-beginning) (region-end))
       (buffer-substring-no-properties (point-min) (point-max)))))
 
 (defun poet-client-remove-quotes-spaces (str)
-"Remove surrounding quotes and spaces from a string.
+  "Remove surrounding quotes and spaces from a string.
 STR string"
-(string-remove-suffix "\"" (string-remove-prefix "\"" (string-trim str))))
+  (string-remove-suffix "\"" (string-remove-prefix "\"" (string-trim str))))
 
 (defun poet-client-create-claim-form (buf)
   "Create ui for po.et claim form.
 BUF Target buffer where content will be extracted"
-
-(defvar w-name)
-(defvar w-date-c)
-(defvar w-date-p)
-(defvar w-author)
-(defvar w-tags)
-(defvar w-api-token)
-
+  (defvar w-name)
+  (defvar w-date-c)
+  (defvar w-date-p)
+  (defvar w-author)
+  (defvar w-tags)
+  (defvar w-api-token)
   (setq content (poet-client-get-content buf))
   (let ((inhibit-read-only t))
     (erase-buffer))
   (remove-overlays)
   (widget-insert (propertize "po.et\n\n" 'face 'info-title-1))
-
   (if (string-blank-p poet-client-api-token)
       (progn
         (widget-insert "See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
         (setq w-api-token (widget-create 'editable-field
-                       :size 1
-                       :format "API Token:\t%v" ; Text after the field!
-                       :notify (lambda (wid &rest _ignore) (if (string-prefix-p "TEST" (widget-value wid))
-                                                              (message "yes") ;; change API address and inform the user
-                                                            (message "no")))
-                       ""))
+                                         :size 1
+                                         :format "API Token:\t%v"
+                                         :notify (lambda (wid &rest _ignore)
+                                                   (if (string-prefix-p "TEST" (widget-value wid))
+                                                       (message "yes")
+                                                     (message "no"))) ""))
         (widget-insert "    ")
         (widget-create 'push-button
-                       :notify (lambda (&rest _ignore) (if (yes-or-no-p "Do you want to remember the token for later sessions? ")
-                                                         (customize-save-variable 'poet-client-api-token (widget-value w-api-token)))) "Remember for later sessions")
-                (widget-insert "\n")))
-
+                       :notify (lambda (&rest _ignore)
+                                 (if (yes-or-no-p "Do you want to remember the token for later sessions? ")
+                                     (customize-save-variable 'poet-client-api-token (widget-value w-api-token))))
+                       "Remember for later sessions")
+        (widget-insert "\n")))
   (setq w-name (widget-create 'editable-field
                               :size 1
-                              :format "Name:\t\t%v\n" ; Text after the field!
-                              ""))
+                              :format "Name:\t\t%v\n" ""))
   (setq w-date-c (widget-create 'editable-field
                                 :size 1
-                                :format "Date Created:\t%v\n" ; Text after the field!
+                                :format "Date Created:\t%v\n"
                                 (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
-
   (setq w-date-p (widget-create 'editable-field
                                 :size 1
-                                :format "Date Published:\t%v\n" ; Text after the field!
+                                :format "Date Published:\t%v\n"
                                 (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
   (setq w-author (widget-create 'editable-field
                                 :size 1
-                                :format "Author:\t\t%v" ; Text after the field!
+                                :format "Author:\t\t%v"
                                 poet-client-default-author))
   (widget-insert "    ")
   (widget-create 'push-button
-                 :notify (lambda (&rest _ignore) (if (yes-or-no-p "Do you want to remember the author for later sessions? ")
-                                                    (customize-save-variable 'poet-client-default-author (widget-value w-author)))) "Remember for later sessions")
+                 :notify (lambda (&rest _ignore)
+                           (if (yes-or-no-p "Do you want to remember the author for later sessions? ")
+                               (customize-save-variable 'poet-client-default-author (widget-value w-author))))
+                 "Remember for later sessions")
   (widget-insert "\n")
   (setq w-tags (widget-create 'editable-field
                               :size 1
-                              :format "Tags:\t\t%v\n" ; Text after the field!
-                              ""))
+                              :format "Tags:\t\t%v\n" ""))
   (widget-insert "\n")
-
   (widget-create 'push-button
                  :notify #'poet-client-send-form
                  "Create claim")
   (widget-insert "    ")
-
   (widget-create 'push-button
                  :notify  #'poet-client-kill-form
                  "Exit [q]")
@@ -170,17 +161,14 @@ BUF Target buffer where content will be extracted"
 
 (defun poet-client-send-form (&rest _ignore)
   "Create claim button callback functions."
-
   (defvar w-name)
   (defvar w-date-c)
   (defvar w-date-p)
   (defvar w-author)
   (defvar w-tags)
   (defvar w-api-token)
-
   (if (not poet-client-api-token)
       (setq poet-client-api-token (widget-value w-api-token)))
-
   (poet-client-create-claim-request (poet-client-remove-quotes-spaces (widget-value w-name))
                                     (poet-client-remove-quotes-spaces (widget-value w-date-c))
                                     (poet-client-remove-quotes-spaces (widget-value w-date-p))
@@ -190,7 +178,6 @@ BUF Target buffer where content will be extracted"
 
 (defun  poet-client-kill-form (&rest _ignore)
   "Exit button callback functions."
-
   (kill-buffer (current-buffer))
   ;; Restore window configuration
   (set-window-configuration poet-client-last-windows))
@@ -198,9 +185,7 @@ BUF Target buffer where content will be extracted"
 ;;;###autoload
 (defun poet-client-register-claim ()
   "Register cleam on po.et network."
-
   (interactive)
-  ; Save the current window configuration
   (setq poet-client-last-windows (current-window-configuration))
   (setq content-buf (current-buffer))
   (with-temp-buffer "*po.et Claim*"
@@ -215,13 +200,10 @@ DATE-P published work publication date
 AUTHOR published work author
 TAGS published work tags
 CONTENT published work content"
-
-
   (if poet-client-enable-logs (progn (custom-set-variables '(request-log-level 'blather)
-                                                    '(request-message-level 'blather)))
+                                                           '(request-message-level 'blather)))
     (progn (custom-set-variables '(request-log-level -1)
                                  '(request-message-level -1))))
-
   (request
    poet-client-api-url
    :type "POST"
@@ -238,12 +220,11 @@ CONTENT published work content"
   "Retrieve works from po.et network."
   (interactive)
   (poet-client-set-prompt-api-token)
-
-  (if poet-client-enable-logs (progn (custom-set-variables '(request-log-level 'blather)
-                                                    '(request-message-level 'blather)))
+  (if poet-client-enable-logs
+      (progn (custom-set-variables '(request-log-level 'blather)
+                                   '(request-message-level 'blather)))
     (progn (custom-set-variables '(request-log-level -1)
                                  '(request-message-level -1))))
-
   (request
    poet-client-api-url
    :type "GET"
@@ -257,57 +238,48 @@ CONTENT published work content"
 (defun poet-client-parse-works-response (works-json-response)
   "Parse works json response and convert it to a list of vector.
 WORKS-JSON-RESPONSE api response of $API_URL/works"
-
   (let ((index 0))
-  (mapcar (lambda (work) (append (list (cl-incf index) (poet-client-parse-works-extract-values work)))) works-json-response)))
+    (mapcar (lambda (work) (append (list (cl-incf index) (poet-client-parse-works-extract-values work)))) works-json-response)))
 
 (defun poet-client-parse-works-extract-values (work)
   "Extract values from a single work entry.
 WORK work entry"
-
   (vector (assoc-default 'name work)
           (assoc-default 'author work)
           (assoc-default 'tags work)
           (assoc-default 'dateCreated work)
-          (assoc-default 'datePublished work)
-          ))
+          (assoc-default 'datePublished work)))
 
-
-(define-derived-mode poet-client-mode tabulated-list-mode "po.et-mode" "Major mode for po.et UI menu of publised works"
+(define-derived-mode poet-client-mode tabulated-list-mode "po.et-mode"
+  "Major mode for po.et UI menu of publised works"
   (define-key tabulated-list-mode-map (kbd "RET") (lambda () (interactive) (poet-client-get-selected-work-from-url)))
   (use-local-map tabulated-list-mode-map)
   (setq tabulated-list-format [("name" 20 t)
                                ("Author" 20 nil)
                                ("tags" 20 t)
                                ("dateCreated" 25 t)
-                               ("datePublished" 25 t)
-                               ;; ("hash"  10 t)
-                               ;; ("archiveUrl" 0 nil)
-                               ])
+                               ("datePublished" 25 t)])
   (setq tabulated-list-padding 2)
   (tabulated-list-init-header))
 
 (defun poet-client-get-selected-work-from-url ()
   "Get/Download published user selected work.
 The index of the selected work is retrieved using 'tabulated-list-get-id'"
-
- ;; Table index starts from 1
+  ;; Table index starts from 1
   (let* ((index (- (tabulated-list-get-id) 1))
-    (content-header (aref poet-client-works index))
-    (url (assoc-default 'archiveUrl content-header)))
-
-  (request
-   url
-   :parser 'buffer-string
-   :success (cl-function
-             (lambda (&key data &allow-other-keys)
-               (poet-client-works-buffer content-header data))))))
+         (content-header (aref poet-client-works index))
+         (url (assoc-default 'archiveUrl content-header)))
+    (request
+     url
+     :parser 'buffer-string
+     :success (cl-function
+               (lambda (&key data &allow-other-keys)
+                 (poet-client-works-buffer content-header data))))))
 
 (defun poet-client-works-buffer (content-header content)
   "Display work content in a buffer.
 CONTENT-HEADER header of the publishd work e.g. name, author.
 CONTENT the body/content of the published work"
-
   (let ((name (assoc-default 'name content-header))
         (author (assoc-default 'author content-header))
         (tags (assoc-default 'tags content-header))
@@ -315,14 +287,13 @@ CONTENT the body/content of the published work"
         (datePublished (assoc-default 'datePublished content-header))
         (hash (assoc-default 'hash content-header))
         (archiveUrl (assoc-default 'archiveUrl content-header)))
-
-  (with-output-to-temp-buffer (format "*po.et %s" name)
-    (print (format "Name: %s\nAuthor: %s\nCreationDate: %s\nPublicationDate: %s\nTags: %s\nHash: %s \nURL: %s\n\nContent:\n%s" name author dateCreated datePublished tags hash archiveUrl content)))))
+    (with-output-to-temp-buffer (format "*po.et %s" name)
+      (print (format "Name: %s\nAuthor: %s\nCreationDate: %s\nPublicationDate: %s\nTags: %s\nHash: %s \nURL: %s\n\nContent:\n%s"
+                     name author dateCreated datePublished tags hash archiveUrl content)))))
 
 (defun poet-client-works-list-popup (works-list)
   "List published works in a popup.
 WORKS-LIST list of published works"
-
   (pop-to-buffer "*po.et Works*" nil)
   (poet-client-mode)
   (setq tabulated-list-entries works-list)
