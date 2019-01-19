@@ -87,94 +87,81 @@ STR string"
 (defun poet-client-create-claim-form (buf)
   "Create ui for po.et claim form.
 BUF Target buffer where content will be extracted"
-  (defvar w-name)
-  (defvar w-date-c)
-  (defvar w-date-p)
-  (defvar w-author)
-  (defvar w-tags)
-  (defvar w-api-token)
-  (setq content (poet-client-get-content buf))
-  (let ((inhibit-read-only t))
-    (erase-buffer))
-  (remove-overlays)
-  (widget-insert (propertize "po.et\n\n" 'face 'info-title-1))
-  (if (string-blank-p poet-client-api-token)
-      (progn
-        (widget-insert "See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
-        (setq w-api-token (widget-create 'editable-field
-                                         :size 1
-                                         :format "API Token:\t%v"
-                                         :notify (lambda (wid &rest _ignore)
-                                                   (if (string-prefix-p "TEST" (widget-value wid))
-                                                       (message "yes")
-                                                     (message "no"))) ""))
-        (widget-insert "    ")
-        (widget-create 'push-button
-                       :notify (lambda (&rest _ignore)
-                                 (if (yes-or-no-p "Do you want to remember the token for later sessions? ")
-                                     (customize-save-variable 'poet-client-api-token (widget-value w-api-token))))
-                       "Remember for later sessions")
-        (widget-insert "\n")))
-  (setq w-name (widget-create 'editable-field
-                              :size 1
-                              :format "Name:\t\t%v\n" ""))
-  (setq w-date-c (widget-create 'editable-field
+  (let (w-name w-date-c w-date-p w-author w-tags w-api-token content)
+    (setq content (poet-client-get-content buf))
+    (let ((inhibit-read-only t))
+      (erase-buffer))
+    (remove-overlays)
+    (widget-insert (propertize "po.et\n\n" 'face 'info-title-1))
+    (if (string-blank-p poet-client-api-token)
+        (progn
+          (widget-insert "See instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html\n")
+          (setq w-api-token (widget-create 'editable-field
+                                           :size 1
+                                           :format "API Token:\t%v"
+                                           :notify (lambda (wid &rest _ignore)
+                                                     (if (string-prefix-p "TEST" (widget-value wid))
+                                                         (message "yes")
+                                                       (message "no"))) ""))
+          (widget-insert "    ")
+          (widget-create 'push-button
+                         :notify (lambda (&rest _ignore)
+                                   (if (yes-or-no-p "Do you want to remember the token for later sessions? ")
+                                       (customize-save-variable 'poet-client-api-token (widget-value w-api-token))))
+                         "Remember for later sessions")
+          (widget-insert "\n")))
+    (setq w-name (widget-create 'editable-field
                                 :size 1
-                                :format "Date Created:\t%v\n"
-                                (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
-  (setq w-date-p (widget-create 'editable-field
+                                :format "Name:\t\t%v\n" ""))
+    (setq w-date-c (widget-create 'editable-field
+                                  :size 1
+                                  :format "Date Created:\t%v\n"
+                                  (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
+    (setq w-date-p (widget-create 'editable-field
+                                  :size 1
+                                  :format "Date Published:\t%v\n"
+                                  (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
+    (setq w-author (widget-create 'editable-field
+                                  :size 1
+                                  :format "Author:\t\t%v"
+                                  poet-client-default-author))
+    (widget-insert "    ")
+    (widget-create 'push-button
+                   :notify (lambda (&rest _ignore)
+                             (if (yes-or-no-p "Do you want to remember the author for later sessions? ")
+                                 (customize-save-variable 'poet-client-default-author (widget-value w-author))))
+                   "Remember for later sessions")
+    (widget-insert "\n")
+    (setq w-tags (widget-create 'editable-field
                                 :size 1
-                                :format "Date Published:\t%v\n"
-                                (format-time-string "%Y-%m-%dT%H:%M:%S.%3NZ" nil "UTC0")))
-  (setq w-author (widget-create 'editable-field
-                                :size 1
-                                :format "Author:\t\t%v"
-                                poet-client-default-author))
-  (widget-insert "    ")
-  (widget-create 'push-button
-                 :notify (lambda (&rest _ignore)
-                           (if (yes-or-no-p "Do you want to remember the author for later sessions? ")
-                               (customize-save-variable 'poet-client-default-author (widget-value w-author))))
-                 "Remember for later sessions")
-  (widget-insert "\n")
-  (setq w-tags (widget-create 'editable-field
-                              :size 1
-                              :format "Tags:\t\t%v\n" ""))
-  (widget-insert "\n")
-  (widget-create 'push-button
-                 :notify #'poet-client-send-form
-                 "Create claim")
-  (widget-insert "    ")
-  (widget-create 'push-button
-                 :notify  #'poet-client-kill-form
-                 "Exit [q]")
-  (widget-insert "\n")
-  (widget-insert (make-string 80 ?\u2501))
-  (widget-insert "\n\n")
-  (widget-insert (propertize "Content" 'face 'info-title-2))
-  (widget-insert "\n-------------------------------------------\n")
-  (widget-insert (format "%s" content))
-  (define-key widget-keymap (kbd "q") (lambda () (interactive) (poet-client-kill-form)))
-  (use-local-map widget-keymap)
-  (widget-setup)
-  (goto-char (point-min)))
-
-(defun poet-client-send-form (&rest _ignore)
-  "Create claim button callback functions."
-  (defvar w-name)
-  (defvar w-date-c)
-  (defvar w-date-p)
-  (defvar w-author)
-  (defvar w-tags)
-  (defvar w-api-token)
-  (if (not poet-client-api-token)
-      (setq poet-client-api-token (widget-value w-api-token)))
-  (poet-client-create-claim-request (poet-client-remove-quotes-spaces (widget-value w-name))
-                                    (poet-client-remove-quotes-spaces (widget-value w-date-c))
-                                    (poet-client-remove-quotes-spaces (widget-value w-date-p))
-                                    (poet-client-remove-quotes-spaces (widget-value w-author))
-                                    (poet-client-remove-quotes-spaces (widget-value w-tags))
-                                    content))
+                                :format "Tags:\t\t%v\n" ""))
+    (widget-insert "\n")
+    (widget-create 'push-button
+                   :notify (lambda (&rest _ignore)
+                             (if (not poet-client-api-token)
+                                 (setq poet-client-api-token (widget-value w-api-token)))
+                             (poet-client-create-claim-request
+                              (poet-client-remove-quotes-spaces (widget-value w-name))
+                              (poet-client-remove-quotes-spaces (widget-value w-date-c))
+                              (poet-client-remove-quotes-spaces (widget-value w-date-p))
+                              (poet-client-remove-quotes-spaces (widget-value w-author))
+                              (poet-client-remove-quotes-spaces (widget-value w-tags))
+                              content))
+                   "Create claim")
+    (widget-insert "    ")
+    (widget-create 'push-button
+                   :notify  #'poet-client-kill-form
+                   "Exit [q]")
+    (widget-insert "\n")
+    (widget-insert (make-string 80 ?\u2501))
+    (widget-insert "\n\n")
+    (widget-insert (propertize "Content" 'face 'info-title-2))
+    (widget-insert "\n-------------------------------------------\n")
+    (widget-insert (format "%s" content))
+    (define-key widget-keymap (kbd "q") (lambda () (interactive) (poet-client-kill-form)))
+    (use-local-map widget-keymap)
+    (widget-setup)
+    (goto-char (point-min))))
 
 (defun  poet-client-kill-form (&rest _ignore)
   "Exit button callback functions."
@@ -202,8 +189,8 @@ TAGS published work tags
 CONTENT published work content"
   (if poet-client-enable-logs (progn (custom-set-variables '(request-log-level 'blather)
                                                            '(request-message-level 'blather)))
-    (progn (custom-set-variables '(request-log-level -1)
-                                 '(request-message-level -1))))
+    (progn (custom-set-variables '(request-log-level 'info)
+                                 '(request-message-level 'info))))
   (request
    poet-client-api-url
    :type "POST"
