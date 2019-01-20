@@ -141,6 +141,7 @@ BUF Target buffer where content will be extracted"
                              (if (not poet-client-api-token)
                                  (setq poet-client-api-token (widget-value w-api-token)))
                              (poet-client-create-claim-request
+                              poet-client-api-token
                               (poet-client-remove-quotes-spaces (widget-value w-name))
                               (poet-client-remove-quotes-spaces (widget-value w-date-c))
                               (poet-client-remove-quotes-spaces (widget-value w-date-p))
@@ -179,9 +180,10 @@ BUF Target buffer where content will be extracted"
                     (switch-to-buffer-other-window "*po.et Claim*")
                     (poet-client-create-claim-form content-buf)))
 
-(defun poet-client-create-claim-request (name date-c date-p author tags content)
+(defun poet-client-create-claim-request (api-token name date-c date-p author tags content)
   "Register a claim on po.et network.
 NAME published work name
+API-TOKEN api authentication token
 DATE-C published work creation date
 DATE-P published work publication date
 AUTHOR published work author
@@ -189,14 +191,14 @@ TAGS published work tags
 CONTENT published work content"
   (if poet-client-enable-logs (progn (custom-set-variables '(request-log-level 'blather)
                                                            '(request-message-level 'blather)))
-    (progn (custom-set-variables '(request-log-level 'info)
-                                 '(request-message-level 'info))))
+    (custom-set-variables '(request-log-level 'info)
+                          '(request-message-level 'info)))
   (request
    poet-client-api-url
    :type "POST"
    :data (json-encode `(("name" . ,name) ("dateCreated" . ,date-c)
                         ("datePublished" . ,date-p) ("author" . ,author) ("tags" . ,tags) ("content" . ,content)))
-   :headers `(("Content-Type" . "application/json") ("token" . ,poet-client-api-token))
+   :headers `(("Content-Type" . "application/json") ("token" . ,api-token))
    :parser 'json-read
    :success (cl-function
              (lambda (&key data &allow-other-keys)
@@ -227,7 +229,9 @@ CONTENT published work content"
   "Parse works json response and convert it to a list of vector.
 WORKS-JSON-RESPONSE api response of $API_URL/works"
   (let ((index 0))
-    (mapcar (lambda (work) (append (list (cl-incf index) (poet-client-parse-works-extract-values work)))) works-json-response)))
+    (mapcar (lambda (work)
+              (append (list (cl-incf index) (poet-client-parse-works-extract-values work))))
+            works-json-response)))
 
 (defun poet-client-parse-works-extract-values (work)
   "Extract values from a single work entry.
