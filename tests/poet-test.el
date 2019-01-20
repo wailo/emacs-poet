@@ -1,0 +1,20 @@
+(require 'poet-client)
+(describe "po.et api test"
+  (it "parsing po.et works json"
+    (let ((works
+           [((archiveUrl . "url-one")
+             (hash . "hash-one")
+             (name . "code clean up")
+             (dateCreated . "2019-01-20T11:41:56.217Z")
+             (datePublished . "2019-01-20T11:41:56.221Z")
+             (author . "WY")
+             (tags . "cleanup refactoring elisp"))
+            ((archiveUrl . "url-two")
+             (hash . "hash-two")
+             (name . "using let to remove defvar")
+             (dateCreated . "2019-01-19T10:25:27.505Z")
+             (datePublished . "2019-01-19T10:25:27.506Z")
+             (author . "WY")
+             (tags . "localvar let"))]))
+      (setq parsed-data (poet-client-parse-works-response works))
+      (expect (length parsed-data) :to-be 2))))
