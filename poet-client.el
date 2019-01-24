@@ -215,6 +215,7 @@ CONTENT published work content"
                                    '(request-message-level 'blather)))
     (progn (custom-set-variables '(request-log-level -1)
                                  '(request-message-level -1))))
+  (message "Retrieving works list ...")
   (request
    poet-client-api-url
    :type "GET"
@@ -258,6 +259,7 @@ WORK work entry"
   "Get/Download published user selected work.
 The index of the selected work is retrieved using 'tabulated-list-get-id'"
   ;; Table index starts from 1
+  (message "Retrieving ...")
   (let* ((index (- (tabulated-list-get-id) 1))
          (content-header (aref poet-client-works index))
          (url (assoc-default 'archiveUrl content-header)))
