@@ -25,7 +25,7 @@ Retrieve and view claims
 
 ** MELPA
 
-   In progress.
+   @@html:<kbd>@@M-x@@html:</kbd>@@ ~package-install~ ~poet-client~.
 
 ** Manual
 
