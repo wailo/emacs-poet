@@ -1,4 +1,4 @@
-* po.et API client [[https://travis-ci.com/wailo/emacs-poet] [https://travis-ci.com/wailo/emacs-poet.svg?branch=master]][[https://melpa.org/packages/poet-client-badge.svg]]
+* po.et API client [[https://travis-ci.com/wailo/emacs-poet][https://travis-ci.com/wailo/emacs-poet.svg?branch=master]] [[https://melpa.org/packages/poet-client-badge.svg]]
 
 :PROPERTIES:
 :TOC:      ignore
