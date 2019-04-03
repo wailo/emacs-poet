@@ -172,7 +172,7 @@ BUF Target buffer where content will be extracted"
 
 ;;;###autoload
 (defun poet-client-register-claim ()
-  "Register cleam on po.et network."
+  "Register a claim on po.et network."
   (interactive)
   (setq poet-client-last-windows (current-window-configuration))
   (setq content-buf (current-buffer))
