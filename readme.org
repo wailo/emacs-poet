@@ -1,9 +1,5 @@
 * po.et API client [[https://travis-ci.com/wailo/emacs-poet][https://travis-ci.com/wailo/emacs-poet.svg?branch=master]] [[https://melpa.org/#/poet-client][file:https://melpa.org/packages/poet-client-badge.svg]]
 
-:PROPERTIES:
-:TOC:      ignore
-:END:
-
 This is an Emacs client for [[https://www.po.et][po.et]]. A decentralized protocol for content ownership, discovery and monetization in media.
 The client allows a user to:
  1. Create and publish work to po.et from Emacs.
@@ -18,9 +14,6 @@ Retrieve and view claims
 [[file:poet-retrieve-works.gif]]
 
 * Installation
-:PROPERTIES:
-:TOC:      0
-:END:
 
 ** MELPA
 
@@ -40,16 +33,10 @@ Retrieve and view claims
   #+END_SRC
 
 * Configuration
-:PROPERTIES:
-:TOC:      0
-:END:
 
 This is the only required step. Get an API token by following instructions at https://docs.poetnetwork.net/use-poet/create-your-first-claim.html
 
 * Usage
-:PROPERTIES:
-:TOC:      0
-:END:
 
 *** Register a claim:
  1. Activate the buffer that contains the content for publishing.
